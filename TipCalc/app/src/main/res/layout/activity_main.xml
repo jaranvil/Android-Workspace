@@ -115,7 +115,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tip20EditText"
                 android:layout_column="3"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusable="true" />
         </TableRow>
 
         <TableRow
