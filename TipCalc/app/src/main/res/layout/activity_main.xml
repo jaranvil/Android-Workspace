@@ -34,7 +34,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
+                android:id="@+id/billEditText"
                 android:layout_column="1"
                 android:layout_span="3"
                 android:inputType="numberDecimal"
@@ -192,7 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="eg. 18%"
-                android:id="@+id/textView5"
+                android:id="@+id/customPercent"
                 android:layout_column="3"
                 android:textColor="#000"
                 android:layout_gravity="center"
