@@ -11,6 +11,7 @@ import android.widget.*;
 
 public class MainActivity extends AppCompatActivity {
 
+    // control variables
     Button btn0;
     Button btn1;
     Button btn2;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // cast variables to xml elements
         btn0 = (Button) findViewById(R.id.btn0);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         tvOutput = (TextView) findViewById(R.id.tvOutput);
 
         tvOutput.setText("0");
+
+        // button press listeners
 
         OnClickListener click0 = new OnClickListener() {
             @Override

@@ -73,9 +73,9 @@ public class MathFunctions {
     }
 
     public String processOperator(String val) {
+        operatorPressed = true;
         if (numLeft == 0) {
             numLeft = Double.parseDouble(currentVal);
-            operatorPressed = true;
             return currentVal;
         } else {
             numRight = Double.parseDouble(currentVal);
@@ -84,12 +84,22 @@ public class MathFunctions {
     }
 
     public String calculate(String val) {
+        double result = 0;
+
         if (val == "plus") {
-            return Double.toString(add(numLeft, numRight));
+            result = add(numLeft, numRight);
         } else if (val == "minus") {
-            return Double.toString(minus(numLeft, numRight));
+            result = minus(numLeft, numRight);
+        } else if (val == "multiply") {
+            result = multiply(numLeft, numRight);
+        } else if (val == "divide") {
+            result = divide(numLeft, numRight);
         }
-        return "end calculate()";
+
+        numLeft = result;
+        numRight = 0;
+
+        return Double.toString(result);
     }
 
     public String clear() {
@@ -111,6 +121,16 @@ public class MathFunctions {
 
     public double minus(double num1, double num2) {
         double result = num1 - num2;
+        return result;
+    }
+
+    public double multiply(double num1, double num2) {
+        double result = num1 * num2;
+        return result;
+    }
+
+    public double divide(double num1, double num2) {
+        double result = num1 / num2;
         return result;
     }
 }
