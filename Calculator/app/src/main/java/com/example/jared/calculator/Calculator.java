@@ -1,26 +1,35 @@
 package com.example.jared.calculator;
 
-/**
- * Created by Jared on 9/19/2015.
- */
-public class MathFunctions {
+/*
+    Calculator Class
 
+    keyPress() accepts a string of the button pressed, a number or instruction
+    outputs a String to update the calculator screen
+
+ */
+public class Calculator {
+
+    // quick way to sort incoming strings
     String[] numbers = {"0","1","2","3","4","5","6","7","8","9"};
     String[] operators = {"plus","minus","divide","multiply"};
+
+    // the current string displayed on the calculator screen
     String currentVal = "0";
 
+    // last button pressed bool
     boolean operatorPressed = false;
+
+    // input numbers
     double numLeft = 0;
     double numRight = 0;
-    double runningTotal = 0;
 
+    // main function called by GUI class
     public String keyPress(String val) {
-        // int value of the key pressed if it is a number
-        // will be 10 if the key was something else
-        int intKeyVal = validateKeyPress(val);
+
+        boolean operator = validateKeyPress(val);
 
         // if the key was a number
-        if (intKeyVal != 10) {
+        if (!operator) {
             if (!operatorPressed) {
                 // concat number to current output
                 if (currentVal == "0") {
@@ -56,12 +65,12 @@ public class MathFunctions {
         return "end keyPress()";
     }
 
-    public int validateKeyPress(String val) {
+    public boolean validateKeyPress(String val) {
         for (int i = 0; i < numbers.length;i++) {
             if (val == numbers[i])
-                return Integer.parseInt(numbers[i]);
+                return false;
         }
-        return 10;
+        return true;
     }
 
     public boolean validateOperator(String val) {

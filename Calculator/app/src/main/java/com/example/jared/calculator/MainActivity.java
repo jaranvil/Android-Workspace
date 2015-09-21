@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvOutput;
 
 
-    MathFunctions bo = new MathFunctions();
+    Calculator bo = new Calculator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
