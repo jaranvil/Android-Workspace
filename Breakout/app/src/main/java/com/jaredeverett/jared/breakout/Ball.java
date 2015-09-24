@@ -14,17 +14,19 @@ public class Ball {
     private int y = 0;
     private boolean right = false;
     private boolean up = false;
-    private int SPEED;
+    protected int SPEED;
     protected int leftBound = 0;
     protected int rightBound;
-    protected int topBound = 0;
+    protected int topBound = 150;
     protected int bottomBound;
     protected boolean alone = false;
+    protected int color = 0;
 
-    public Ball(int width, int height, int level) {
+    public Ball(int width, int height, int level, int color) {
         Random rnd = new Random();
 
         SPEED = 10 + rnd.nextInt(10+(level*2));
+        this.color = color;
 
         x = rnd.nextInt(width);
         y = rnd.nextInt(height);
@@ -40,7 +42,7 @@ public class Ball {
         }
 
         rightBound = width;
-        bottomBound = height-150;
+        bottomBound = height;
 
     }
 
@@ -48,6 +50,7 @@ public class Ball {
 
         if (alone)
             SPEED = 0;
+
 
         if (up) {
             if (y+25 > bottomBound) {
@@ -68,6 +71,32 @@ public class Ball {
             }
         }
 
+        moveBall(c, paint);
+
+        if (up) {
+            if (y+25 > bottomBound) {
+                up = false;
+            }
+        } else {
+            if (y-25 < topBound) {
+                up = true;
+                moveBall(c, paint);
+            }
+        }
+        if (right) {
+            if (x+25 > rightBound) {
+                right = false;
+                moveBall(c, paint);
+            }
+        } else {
+            if (x-25 < leftBound) {
+                right = true;
+                moveBall(c, paint);
+            }
+        }
+    }
+
+    public void moveBall(Canvas c, Paint p) {
         // move ball
         if (up) {
             y = y + SPEED;
@@ -81,7 +110,8 @@ public class Ball {
         }
 
         // draw ball
-        c.drawCircle(x, y, 25, paint);
+        p.setColor(color);
+        c.drawCircle(x, y, 25, p);
     }
 
     public void getBoundaries(ArrayList<Line> lines, int width,int  height) {
@@ -134,7 +164,7 @@ public class Ball {
         }
 
         // top boundary
-        topBound = 0; // absolute right boundary
+        topBound = 150; // absolute right boundary
         for (int i = y; i > 0;i--) {
             for (int ii = 0;ii < lines.size();ii++) {
                 int x1 = lines.get(ii).getX1();
@@ -157,7 +187,7 @@ public class Ball {
         }
 
         // bottom boundary
-        bottomBound = height-150; // absolute right boundary
+        bottomBound = height; // absolute right boundary
         for (int i = y; i < height;i++) {
             for (int ii = 0;ii < lines.size();ii++) {
                 int x1 = lines.get(ii).getX1();

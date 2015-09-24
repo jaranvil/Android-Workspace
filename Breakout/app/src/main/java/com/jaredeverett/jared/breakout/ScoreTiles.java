@@ -12,6 +12,8 @@ public class ScoreTiles {
     private int bottom;
     private int right;
     private int left;
+    private int width;
+    private int height;
     protected int score = 0;
 
     public ScoreTiles(int top, int bottom, int right, int left) {
@@ -19,15 +21,15 @@ public class ScoreTiles {
         this.bottom = bottom-1;
         this.right = right-1;
         this.left = left-1;
-    }
-
-    public void draw(Canvas c, Paint p) {
 
         int width = right - left;
         int height = bottom - top;
+        this.width = width;
+        this.height = height;
         score = (width * height)/1000;
+    }
 
-
+    public void draw(Canvas c, Paint p) {
         p.setAlpha(80);
         c.drawRect(left, top, right, bottom, p);
 
@@ -38,4 +40,6 @@ public class ScoreTiles {
 
 
     }
+
+
 }
