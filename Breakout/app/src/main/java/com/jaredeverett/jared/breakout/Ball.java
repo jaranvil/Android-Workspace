@@ -10,30 +10,49 @@ import java.util.Random;
  * Created by Jared on 9/22/2015.
  */
 public class Ball {
+    // location
     private int x = 0;
     private int y = 0;
+
+    // direction
     private boolean right = false;
     private boolean up = false;
-    protected int SPEED;
+
+    // boundaries
     protected int leftBound = 0;
     protected int rightBound;
     protected int topBound = 150;
     protected int bottomBound;
-    protected boolean alone = false;
+
+    // other properties
     protected int color = 0;
+    protected int radius = 25;
+    protected int SPEED;
+    protected boolean alone = false;
 
     public Ball(int width, int height, int level, int color) {
         Random rnd = new Random();
 
+        // random speed
         SPEED = 10 + rnd.nextInt(10+(level*2));
+
+        // this levels color
         this.color = color;
 
+        // for smaller screens
+        if (width < 500) {
+            radius=10;
+            topBound = 75;
+            SPEED = 2 + rnd.nextInt(10+(level*2));
+        }
+
+        // random start position
         x = rnd.nextInt(width);
         y = rnd.nextInt(height);
 
+        // random start direction
         int movingUp = rnd.nextInt(2);
         int movingRight = rnd.nextInt(2);
-
         if (movingUp == 1) {
             up = true;
         }
@@ -41,9 +60,9 @@ public class Ball {
             right = true;
         }
 
+        // set absolute boundaries
         rightBound = width;
         bottomBound = height;
-
     }
 
     public void draw(Canvas c, Paint paint, ArrayList<Line> lines, int width, int height) {
@@ -76,6 +95,7 @@ public class Ball {
         if (up) {
             if (y+25 > bottomBound) {
                 up = false;
+                moveBall(c, paint);
             }
         } else {
             if (y-25 < topBound) {
@@ -111,7 +131,7 @@ public class Ball {
 
         // draw ball
         p.setColor(color);
-        c.drawCircle(x, y, 25, p);
+        c.drawCircle(x, y, radius, p);
     }
 
     public void getBoundaries(ArrayList<Line> lines, int width,int  height) {
@@ -164,7 +184,7 @@ public class Ball {
         }
 
         // top boundary
-        topBound = 150; // absolute right boundary
+
         for (int i = y; i > 0;i--) {
             for (int ii = 0;ii < lines.size();ii++) {
                 int x1 = lines.get(ii).getX1();

@@ -2,4 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="movesTextSize">350sp</dimen>
+    <dimen name="statsTextSize">25sp</dimen>
+
+    <dimen name="lvlTextSize">60sp</dimen>
+    <dimen name="lvlCompleteTextSize">35sp</dimen>
+    <dimen name="finalScoreTextSize">20sp</dimen>
+    <dimen name="instructionsTextSize">15sp</dimen>
 </resources>

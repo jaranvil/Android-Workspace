@@ -27,7 +27,7 @@ public class AnimatedView extends ImageView{
     private ArrayList<ScoreTiles> tiles = new ArrayList<>();
 
 //                                          green                           red                         purple                      orange                      blue                            yellow
-    private int[] colors = {Color.parseColor("#00B800"), Color.parseColor("#CC0000"), Color.parseColor("#B166C9"), Color.parseColor("#FF9900"), Color.parseColor("#00CCFF"), Color.parseColor("#FFFF00")};
+    private int[] colors = {Color.parseColor("#00B800"), Color.parseColor("#FF4D4D"), Color.parseColor("#B166C9"), Color.parseColor("#FF9900"), Color.parseColor("#00CCFF"), Color.parseColor("#FFFF00")};
     private int[] avaliableColors = colors;
     private int levelColor;
     private int level = 1;
@@ -60,7 +60,7 @@ public class AnimatedView extends ImageView{
     };
 
     protected void onDraw(Canvas c) {
-        c.drawColor(Color.parseColor("#555555"));
+
 
         if (loading) {
             loading = false;
@@ -70,12 +70,19 @@ public class AnimatedView extends ImageView{
         if (lvlScreen) {
             drawLvlScreen(c, paint);
         } else {
+            c.drawColor(Color.parseColor("#555555"));
             drawStats(c, paint);
 
             paint.setColor(levelColor);
-            paint.setTextSize(setTextSize(Integer.toString(moves), (this.getWidth()) - 500, paint));
+            //paint.setTextSize(setTextSize(Integer.toString(moves), (this.getWidth()) - 500, paint));
+            paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.movesTextSize));
             paint.setAlpha(50);
-            c.drawText(Integer.toString(moves), 200, this.getHeight()-300, paint);
+            if (moves > 9) {
+                c.drawText(Integer.toString(moves), 10, this.getHeight()-100, paint);
+            } else {
+                c.drawText(Integer.toString(moves), this.getWidth()/4, this.getHeight()-100, paint);
+            }
+
 
             // draw balls
             paint.setColor(levelColor);
@@ -116,6 +123,7 @@ public class AnimatedView extends ImageView{
     }
 
     public void drawLvlScreen(Canvas c, Paint p) {
+        c.drawColor(Color.parseColor("#000000"));
 
         // draw balls
         paint.setColor(levelColor);
@@ -127,43 +135,50 @@ public class AnimatedView extends ImageView{
         p.setColor(Color.parseColor("#FFFFFF"));
         p.setStyle(Paint.Style.STROKE);
 
-        int x = (this.getWidth()-300)/2;
         c.drawBitmap(title, 0, 100, paint);
 
-        p.setColor(Color.parseColor("#FFFFFF"));
+        p.setColor(Color.parseColor("#ffffff"));
         p.setStyle(Paint.Style.STROKE);
 
-        p.setTextSize(75);
-        c.drawText("Separate balls by dividing cells.", 0, 500, paint);
-        c.drawText("There are a limited number of ", 0, 700, paint);
-        c.drawText("allowed moves per level. ", 0, 775, paint);
+        int y = this.getHeight()/2;
+
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.instructionsTextSize));
+        c.drawText("Separate balls by dividing cells.", 0, y, paint);
+        c.drawText("There are a limited number of ", 0, y+50, paint);
+        c.drawText("allowed moves per level. ", 0, y+100, paint);
 
         p.setTextSize(setTextSize("tap to start", (this.getWidth()) - 500, p));
-        c.drawText("tap to start", 250, this.getHeight()-150, paint);
+        c.drawText("tap to start", 10, this.getHeight()-150, paint);
     }
 
     public void drawLvlComplete(Canvas c, Paint p) {
         grayOutScreen(c, p);
 
-        paint.setTextSize(setTextSize("Level " + level + " Complate", (this.getWidth()) - 300, paint));grayOutScreen(c, p);
+       // paint.setTextSize(setTextSize("Level " + level + " Complate", (this.getWidth()) - 300, paint));grayOutScreen(c, p);
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlTextSize));
         paint.setColor(Color.parseColor("#FFFFFF"));
-        c.drawText("Level " + level + " Complete", 150, 500, paint);
+        c.drawText("Level " + level, 10, this.getHeight() / 3, paint);
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
+        c.drawText("Complete!", 10, (this.getHeight() / 3)+100, paint);
 
         int totalPossibleScore = (this.getWidth() * this.getHeight())/1000;
         int percent = ((lvlScore*100)/totalPossibleScore);
 
+        int cell = this.getWidth() / 5;
+        int starY = (this.getHeight()/2) + 50;
+
         if (percent < 50) {
-            c.drawBitmap(gold_star, 250, 550, paint);
-            c.drawBitmap(gray_star, 450, 550, paint);
-            c.drawBitmap(gray_star, 650, 550, paint);
+            c.drawBitmap(gold_star, 10, starY, paint);
+            c.drawBitmap(gray_star, 10 + cell, starY, paint);
+            c.drawBitmap(gray_star, 10 + (cell*2), starY, paint);
         } else if (percent < 80) {
-            c.drawBitmap(gold_star, 250, 550, paint);
-            c.drawBitmap(gold_star, 450, 550, paint);
-            c.drawBitmap(gray_star, 650, 550, paint);
+            c.drawBitmap(gold_star, 10, starY, paint);
+            c.drawBitmap(gold_star, 10+cell, starY, paint);
+            c.drawBitmap(gray_star, 10+(cell*2), starY, paint);
         } else {
-            c.drawBitmap(gold_star, 250, 550, paint);
-            c.drawBitmap(gold_star, 450, 550, paint);
-            c.drawBitmap(gold_star, 650, 550, paint);
+            c.drawBitmap(gold_star, 10, starY, paint);
+            c.drawBitmap(gold_star, 10+cell, starY, paint);
+            c.drawBitmap(gold_star, 10 + (cell*2), starY, paint);
         }
     }
 
@@ -172,27 +187,28 @@ public class AnimatedView extends ImageView{
         int totalPossibleScore = ((this.getWidth() * this.getHeight())/1000) * level;
         int percent = ((totalScre*100)/totalPossibleScore);
 
-        paint.setTextSize(setTextSize("No More Moves", (this.getWidth()) - 300, paint));
+        //paint.setTextSize(setTextSize("No More Moves", (this.getWidth()) - 300, paint));
         paint.setColor(Color.parseColor("#FFFFFF"));
-        c.drawText("No More Moves", 150, 400, p);
-        paint.setTextSize(setTextSize("final score " + totalScre + " (" + percent + "%)", (this.getWidth()) - 500, paint));
-        c.drawText("Final Score " + totalScre + " (" + percent + "%)", 250, 550, p);
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
+        c.drawText("No More Moves :(", 10, this.getHeight()/3, p);
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.finalScoreTextSize));
+        c.drawText("Final Score: " + totalScre + " (" + percent + "%)", 10, (this.getHeight()/3)+100, p);
 
 
-        int starsY = 675;
-        if (percent < 50) {
-            c.drawBitmap(gold_star, 250, starsY, paint);
-            c.drawBitmap(gray_star, 450, starsY, paint);
-            c.drawBitmap(gray_star, 650, starsY, paint);
-        } else if (percent < 80) {
-            c.drawBitmap(gold_star, 250, starsY, paint);
-            c.drawBitmap(gold_star, 450, starsY, paint);
-            c.drawBitmap(gray_star, 650, starsY, paint);
-        } else {
-            c.drawBitmap(gold_star, 250, starsY, paint);
-            c.drawBitmap(gold_star, 450, starsY, paint);
-            c.drawBitmap(gold_star, 650, starsY, paint);
-        }
+//        int starsY = 675;
+//        if (percent < 50) {
+//            c.drawBitmap(gold_star, 250, starsY, paint);
+//            c.drawBitmap(gray_star, 450, starsY, paint);
+//            c.drawBitmap(gray_star, 650, starsY, paint);
+//        } else if (percent < 80) {
+//            c.drawBitmap(gold_star, 250, starsY, paint);
+//            c.drawBitmap(gold_star, 450, starsY, paint);
+//            c.drawBitmap(gray_star, 650, starsY, paint);
+//        } else {
+//            c.drawBitmap(gold_star, 250, starsY, paint);
+//            c.drawBitmap(gold_star, 450, starsY, paint);
+//            c.drawBitmap(gold_star, 650, starsY, paint);
+//        }
 
 
         // stop moving balls
@@ -228,13 +244,19 @@ public class AnimatedView extends ImageView{
 
     public void drawStats(Canvas c, Paint p) {
         p.setColor(Color.parseColor("#111111"));
-        c.drawRect(0, 0, this.getWidth(), 150, p);
+        int yVal = 100;
+        if (this.getWidth() < 500) {
+            yVal = 50;
+            c.drawRect(0, 0, this.getWidth(), 75, p);
+        } else
+            c.drawRect(0, 0, this.getWidth(), 150, p);
 
         p.setColor(levelColor);
         int possibleScore = ((this.getWidth() * this.getHeight()) / 1000) - ((this.getWidth()*150)/1000);
         int percent = ((lvlScore * 100) / possibleScore);
-        paint.setTextSize(setTextSize("Level score " + lvlScore + " (" + percent + "%)", (this.getWidth()) - 300, p));
-        c.drawText("Level score " + lvlScore + " (" + percent + "%)", 150, 100, p);
+        //paint.setTextSize(setTextSize("Level score " + lvlScore + " (" + percent + "%)", (this.getWidth()) - 300, p));
+        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.statsTextSize));
+        c.drawText("Level score " + lvlScore + " (" + percent + "%)", 25, yVal, p);
     }
 
     public void grayOutScreen(Canvas c, Paint p) {
@@ -244,6 +266,9 @@ public class AnimatedView extends ImageView{
         float top = 150;
         float right = this.getWidth();
         float bottom = this.getHeight();
+        if (this.getWidth() < 500)
+            top = 75;
+
         c.drawRect(left, top, right, bottom, paint);
     }
 
@@ -259,12 +284,12 @@ public class AnimatedView extends ImageView{
         }
 
         levelColor = colors[rnd.nextInt(colors.length)];
-        moves = level*2;
+        moves = 1 + level*2;
 
         totalScre += lvlScore;
         lvlScore = 0;
 
-        for (int i = 0;i < (level*2);i++) {
+        for (int i = 0;i < 1+(level*2);i++) {
             balls.add(new Ball(this.getWidth(), this.getHeight(), level, levelColor));
         }
     }
@@ -364,7 +389,10 @@ public class AnimatedView extends ImageView{
             }
 
             // top boundary
-            topBound = 150; // absolute right boundary
+            if (this.getWidth() < 500)
+                topBound = 75;
+            else
+                topBound = 150;
             for (int i = y; i > 0;i--) {
                 for (int ii = 0;ii < lines.size();ii++) {
                     int x1 = lines.get(ii).getX1();
