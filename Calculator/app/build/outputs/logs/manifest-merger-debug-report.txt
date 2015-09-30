@@ -22,7 +22,7 @@ MERGED from [com.android.support:support-v4:23.0.1] C:\Users\Jared\Documents\And
 	android:allowBackup
 		ADDED from C:\Users\Jared\Documents\Android-Workspace\Calculator\app\src\main\AndroidManifest.xml:6:9-35
 	android:icon
-		ADDED from C:\Users\Jared\Documents\Android-Workspace\Calculator\app\src\main\AndroidManifest.xml:7:9-43
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Calculator\app\src\main\AndroidManifest.xml:7:9-49
 	android:theme
 		ADDED from C:\Users\Jared\Documents\Android-Workspace\Calculator\app\src\main\AndroidManifest.xml:9:9-40
 activity#com.example.jared.calculator.MainActivity

@@ -27,7 +27,10 @@ public class Line {
     }
 
     public void draw(Canvas c, Paint paint) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5);
         c.drawLine(x1, y1, x2, y2, paint);
+        paint.setStyle(Paint.Style.FILL);
     }
 
     public int getX1() {

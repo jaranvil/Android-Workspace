@@ -15,6 +15,7 @@ public class ScoreTiles {
     private int width;
     private int height;
     protected int score = 0;
+    private int alpha = 0;
 
     public ScoreTiles(int top, int bottom, int right, int left) {
         this.top = top-1;
@@ -30,13 +31,16 @@ public class ScoreTiles {
     }
 
     public void draw(Canvas c, Paint p) {
-        p.setAlpha(80);
+        if (alpha < 100)
+            alpha+=2;
+
+        p.setAlpha(alpha);
         c.drawRect(left, top, right, bottom, p);
 
-        p.setAlpha(50);
-        p.setColor(Color.parseColor("#FFFFFF"));
-        p.setTextSize(40);
-        c.drawText(Integer.toString(score), left + (width / 2), top + (height / 2), p);
+//        p.setAlpha(50);
+//        p.setColor(Color.parseColor("#FFFFFF"));
+//        p.setTextSize(40);
+//        c.drawText(Integer.toString(score), left + (width / 2), top + (height / 2), p);
 
 
     }

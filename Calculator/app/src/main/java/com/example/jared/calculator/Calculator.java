@@ -10,18 +10,20 @@ package com.example.jared.calculator;
 public class Calculator {
 
     // quick way to sort incoming strings
-    String[] numbers = {"0","1","2","3","4","5","6","7","8","9"};
-    String[] operators = {"plus","minus","divide","multiply"};
+    protected String[] numbers = {"0","1","2","3","4","5","6","7","8","9"};
+    protected String[] operators = {"plus","minus","divide","multiply","equals"};
 
     // the current string displayed on the calculator screen
-    String currentVal = "0";
+    protected String currentVal = "0";
+    protected String currentOperator = "";
+    protected String history = "";
 
     // last button pressed bool
-    boolean operatorPressed = false;
+    protected boolean operatorPressed = false;
 
     // input numbers
-    double numLeft = 0;
-    double numRight = 0;
+    protected double numLeft = 0;
+    protected double numRight = 0;
 
     // main function called by GUI class
     public String keyPress(String val) {
@@ -30,6 +32,7 @@ public class Calculator {
 
         // if the key was a number
         if (!operator) {
+            history = "";
             if (!operatorPressed) {
                 // concat number to current output
                 if (currentVal == "0") {
@@ -50,14 +53,15 @@ public class Calculator {
                 currentVal = processOperator(val);
                 return currentVal;
             } else {
+                history = "";
                 if (val == "clear") {
-                    currentVal = clear();
-                    return currentVal;
+                    return clear();
                 } else if (val == "sign") {
-                    currentVal = sign();
-                    return currentVal;
+                    return sign();
                 } else if (val == "backspace") {
-                    currentVal = backspace();
+                    return backspace();
+                } else if (val == ".") {
+                    currentVal += ".";
                     return currentVal;
                 }
             }
@@ -85,42 +89,69 @@ public class Calculator {
         operatorPressed = true;
         if (numLeft == 0) {
             numLeft = Double.parseDouble(currentVal);
+            currentOperator = val;
             return currentVal;
         } else {
             numRight = Double.parseDouble(currentVal);
-            return calculate(val);
+            currentVal = calculate(currentOperator);
+            if (val == "equals")
+                numLeft = 0;
+            currentOperator = val;
+            return currentVal;
         }
     }
 
     public String calculate(String val) {
         double result = 0;
-
+        String op = "";
         if (val == "plus") {
             result = add(numLeft, numRight);
+            op = "+";
         } else if (val == "minus") {
             result = minus(numLeft, numRight);
+            op = "-";
         } else if (val == "multiply") {
             result = multiply(numLeft, numRight);
+            op = "*";
         } else if (val == "divide") {
             result = divide(numLeft, numRight);
+            op = "/";
         }
-
+        history = numLeft + "  " + op + "  " + numRight;
+        if (op.equals("/") && numRight == 0)
+            return "NaN";
         numLeft = result;
         numRight = 0;
-
         return Double.toString(result);
     }
 
     public String clear() {
-        return "42";
+        currentVal = "0";
+        numLeft = 0;
+        numRight = 0;
+        operatorPressed = false;
+        return currentVal;
     }
 
     public String sign() {
-        return "42";
+        if (currentVal.substring(0,1).equals("-"))
+            currentVal = currentVal.replace("-", "");
+        else {
+            if (operatorPressed || currentVal.equals("0")) {
+                currentVal = "-";
+                operatorPressed = false;
+            } else {
+                currentVal = "-" + currentVal;
+            }
+        }
+
+        return currentVal;
     }
 
     public String backspace() {
-        return "42";
+        if (currentVal.length() > 0 )
+            currentVal = currentVal.substring(0, currentVal.length()-1);
+        return currentVal;
     }
 
     public double add(double num1, double num2) {

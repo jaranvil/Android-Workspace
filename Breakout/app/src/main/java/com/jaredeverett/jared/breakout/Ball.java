@@ -29,6 +29,7 @@ public class Ball {
     protected int radius = 25;
     protected int SPEED;
     protected boolean alone = false;
+    protected boolean stayInBounds = true;
 
     public Ball(int width, int height, int level, int color) {
         Random rnd = new Random();
@@ -70,50 +71,55 @@ public class Ball {
         if (alone)
             SPEED = 0;
 
-
-        if (up) {
-            if (y+25 > bottomBound) {
-                up = false;
+        if (stayInBounds) {
+            if (up) {
+                if (y+25 > bottomBound) {
+                    up = false;
+                }
+            } else {
+                if (y-25 < topBound) {
+                    up = true;
+                }
             }
-        } else {
-            if (y-25 < topBound) {
-                up = true;
-            }
-        }
-        if (right) {
-            if (x+25 > rightBound) {
-                right = false;
-            }
-        } else {
-            if (x-25 < leftBound) {
-                right = true;
+            if (right) {
+                if (x+25 > rightBound) {
+                    right = false;
+                }
+            } else {
+                if (x-25 < leftBound) {
+                    right = true;
+                }
             }
         }
 
         moveBall(c, paint);
 
-        if (up) {
-            if (y+25 > bottomBound) {
-                up = false;
-                moveBall(c, paint);
+        if (stayInBounds) {
+            if (up) {
+                if (y+25 > bottomBound) {
+                    up = false;
+                    moveBall(c, paint);
+                }
+            } else {
+                if (y-25 < topBound) {
+                    up = true;
+                    moveBall(c, paint);
+                }
             }
-        } else {
-            if (y-25 < topBound) {
-                up = true;
-                moveBall(c, paint);
+            if (right) {
+                if (x+25 > rightBound) {
+                    right = false;
+                    moveBall(c, paint);
+                }
+            } else {
+                if (x-25 < leftBound) {
+                    right = true;
+                    moveBall(c, paint);
+                }
             }
         }
-        if (right) {
-            if (x+25 > rightBound) {
-                right = false;
-                moveBall(c, paint);
-            }
-        } else {
-            if (x-25 < leftBound) {
-                right = true;
-                moveBall(c, paint);
-            }
-        }
+
+
     }
 
     public void moveBall(Canvas c, Paint p) {

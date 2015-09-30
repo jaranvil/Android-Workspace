@@ -4,11 +4,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#000000">
+
+
+    <!--<com.jaredeverett.jared.breakout.AnimatedView-->
+        <!--android:id="@+id/anim_view"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:layout_width="fill_parent"/>-->
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button" />
+
     <com.jaredeverett.jared.breakout.AnimatedView
-        android:id="@+id/anim_view"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_width="fill_parent"/>
-
-
-
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

@@ -29,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
     Button btnMinus;
     Button btnMultiply;
     Button btnDivide;
+    Button btnEquals;
+    Button btnDecimal;
     TextView tvOutput;
+    TextView tvHistory;
 
 
     Calculator bo = new Calculator();
@@ -57,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
         btnMinus = (Button) findViewById(R.id.btnMinus);
         btnMultiply = (Button) findViewById(R.id.btnMultiply);
         btnDivide = (Button) findViewById(R.id.btnDivide);
+        btnEquals = (Button) findViewById(R.id.btnEquals);
+        btnDecimal = (Button) findViewById(R.id.btnDecimal);
         tvOutput = (TextView) findViewById(R.id.tvOutput);
+        tvHistory = (TextView) findViewById(R.id.tvHistory);
 
         tvOutput.setText("0");
 
@@ -167,6 +173,14 @@ public class MainActivity extends AppCompatActivity {
         };
         btnBackspace.setOnClickListener(clickBackspace);
 
+        OnClickListener clickDecimal = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyPress(".");
+            }
+        };
+        btnDecimal.setOnClickListener(clickDecimal);
+
         OnClickListener clickPlus = new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +212,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         btnDivide.setOnClickListener(clickDivide);
+
+        OnClickListener clickEquals = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyPress("equals");
+            }
+        };
+        btnEquals.setOnClickListener(clickEquals);
     }
 
     @Override
@@ -224,5 +246,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void keyPress(String val) {
         tvOutput.setText(bo.keyPress(val));
+        tvHistory.setText(bo.history);
     }
 }

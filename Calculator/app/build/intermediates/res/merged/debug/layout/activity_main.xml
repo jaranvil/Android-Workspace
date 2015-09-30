@@ -13,6 +13,22 @@
         android:layout_centerHorizontal="true"
         android:background="#cccccc">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tvHistory"
+                android:layout_gravity="center_horizontal"
+                android:gravity="right"
+                android:textSize="26sp" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -352,7 +368,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button19"
+                android:id="@+id/btnDecimal"
                 android:height="50dp"
                 android:width="10dp"
                 android:layout_below="@+id/btn0"
@@ -362,7 +378,8 @@
                 android:layout_margin="2dp"
                 android:textColor="#ffffff"
                 android:textSize="25dp"
-                android:visibility="invisible" />
+                android:visibility="visible"
+                android:text="@string/decimal" />
 
             <Button
                 android:layout_width="wrap_content"

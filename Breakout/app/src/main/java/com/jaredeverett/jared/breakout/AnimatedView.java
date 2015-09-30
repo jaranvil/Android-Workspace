@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AnimatedView extends ImageView{
+
+    // http://i.imgur.com/V5MpSWy.png
+
     private Context mContext;
     private Handler h;
     private final int FRAME_RATE = 30;
@@ -34,17 +37,20 @@ public class AnimatedView extends ImageView{
     private int lvlScore = 0;
     private int totalScre = 0;
     private int moves = 0;
+    private int movesAlphaVal = 50;
+    private int homeTransitionX = 0;
 
     Bitmap gold_star = BitmapFactory.decodeResource(getResources(), R.drawable.gold_star);
     Bitmap gray_star = BitmapFactory.decodeResource(getResources(), R.drawable.gray_star);
     Bitmap title = BitmapFactory.decodeResource(getResources(), R.drawable.title);
 
-
+    //game states
     private boolean lvlScreen = true;
     private boolean lvlComplete = false;
     private boolean gameOver = false;
     private boolean newGame = true;
     private boolean loading = true;
+    private boolean homeTransition = false;
 
     public AnimatedView(Context context, AttributeSet attrs)  {
         super(context, attrs);
@@ -76,13 +82,10 @@ public class AnimatedView extends ImageView{
             paint.setColor(levelColor);
             //paint.setTextSize(setTextSize(Integer.toString(moves), (this.getWidth()) - 500, paint));
             paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.movesTextSize));
-            paint.setAlpha(50);
-            if (moves > 9) {
-                c.drawText(Integer.toString(moves), 10, this.getHeight()-100, paint);
-            } else {
-                c.drawText(Integer.toString(moves), this.getWidth()/4, this.getHeight()-100, paint);
-            }
 
+            // print the remaining level moves on the background
+            paint.setAlpha(movesAlphaVal);
+            c.drawText(Integer.toString(moves), 0, this.getHeight()-100, paint);
 
             // draw balls
             paint.setColor(levelColor);
@@ -123,7 +126,30 @@ public class AnimatedView extends ImageView{
     }
 
     public void drawLvlScreen(Canvas c, Paint p) {
+        int x = homeTransitionX;
+        if (homeTransition) {
+            homeTransitionX-=50;
+            x-=50;
+
+            for (int i=0;i<balls.size();i++) {
+                balls.get(i).stayInBounds = false;
+                balls.get(i).SPEED = 50;
+            }
+
+            if (x < (0 - this.getWidth())) {
+                homeTransition = false;
+                lvlScreen = false;
+                homeTransitionX = 0;
+                startLvl();
+            }
+        }
+
         c.drawColor(Color.parseColor("#000000"));
+
+        if (homeTransition) {
+            paint.setColor(Color.parseColor("#555555"));
+            c.drawRect(this.getWidth()+x, 0, this.getWidth(), this.getHeight(), paint);
+        }
 
         // draw balls
         paint.setColor(levelColor);
@@ -133,22 +159,22 @@ public class AnimatedView extends ImageView{
         }
 
         p.setColor(Color.parseColor("#FFFFFF"));
-        p.setStyle(Paint.Style.STROKE);
+        //p.setStyle(Paint.Style.STROKE);
 
-        c.drawBitmap(title, 0, 100, paint);
+        c.drawBitmap(title, x, 100, paint);
 
         p.setColor(Color.parseColor("#ffffff"));
-        p.setStyle(Paint.Style.STROKE);
+       // p.setStyle(Paint.Style.STROKE);
 
         int y = this.getHeight()/2;
 
         paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.instructionsTextSize));
-        c.drawText("Separate balls by dividing cells.", 0, y, paint);
-        c.drawText("There are a limited number of ", 0, y+50, paint);
-        c.drawText("allowed moves per level. ", 0, y+100, paint);
+        c.drawText("Separate balls by dividing cells.", x, y, paint);
+        c.drawText("There are a limited number of ", x, y+50, paint);
+        c.drawText("allowed moves per level. ", x, y+100, paint);
 
         p.setTextSize(setTextSize("tap to start", (this.getWidth()) - 500, p));
-        c.drawText("tap to start", 10, this.getHeight()-150, paint);
+        c.drawText("tap to start", x, this.getHeight()-150, paint);
     }
 
     public void drawLvlComplete(Canvas c, Paint p) {
@@ -256,7 +282,12 @@ public class AnimatedView extends ImageView{
         int percent = ((lvlScore * 100) / possibleScore);
         //paint.setTextSize(setTextSize("Level score " + lvlScore + " (" + percent + "%)", (this.getWidth()) - 300, p));
         paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.statsTextSize));
-        c.drawText("Level score " + lvlScore + " (" + percent + "%)", 25, yVal, p);
+
+        // this'll do
+        if (percent == 99)
+            percent = 100;
+
+        c.drawText("Level " + level + "     Score " + percent + "%", 25, yVal, p);
     }
 
     public void grayOutScreen(Canvas c, Paint p) {
@@ -285,6 +316,7 @@ public class AnimatedView extends ImageView{
 
         levelColor = colors[rnd.nextInt(colors.length)];
         moves = 1 + level*2;
+        movesAlphaVal = 50;
 
         totalScre += lvlScore;
         lvlScore = 0;
@@ -304,8 +336,8 @@ public class AnimatedView extends ImageView{
         if (eventAction == MotionEvent.ACTION_DOWN) {
 
             if (lvlScreen) {
-                lvlScreen = false;
-                startLvl();
+                homeTransition = true;
+
             } else if (lvlComplete) {
                 lvlComplete = false;
                 //lvlScreen = true;
@@ -318,6 +350,12 @@ public class AnimatedView extends ImageView{
                 setupHomescreen();
             } else {
                 moves--;
+
+                // slowly make the moves remaining number more visible
+                movesAlphaVal = 100 - ((moves - 1)*10);
+                if (movesAlphaVal < 10)
+                    movesAlphaVal = 10;
+
                 createLine(x, y);
             }
 
