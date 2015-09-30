@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvHistory;
 
 
-    Calculator bo = new Calculator();
+    Calculator calculator = new Calculator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,7 +245,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void keyPress(String val) {
-        tvOutput.setText(bo.keyPress(val));
-        tvHistory.setText(bo.history);
+        // send key press to calculator and get updated output string
+        tvOutput.setText(calculator.keyPress(val));
+        tvHistory.setText(calculator.history);
     }
 }

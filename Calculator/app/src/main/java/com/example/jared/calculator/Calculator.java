@@ -69,6 +69,7 @@ public class Calculator {
         return "end keyPress()";
     }
 
+    // return true if the input is not a number
     public boolean validateKeyPress(String val) {
         for (int i = 0; i < numbers.length;i++) {
             if (val == numbers[i])
@@ -77,6 +78,7 @@ public class Calculator {
         return true;
     }
 
+    // return true if input is an operator
     public boolean validateOperator(String val) {
         for (int i = 0; i < operators.length;i++) {
             if (val == operators[i])
