@@ -1,0 +1,46 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_below="@+id/tvHeader"
+    android:layout_alignRight="@+id/tvHeader"
+    android:layout_alignEnd="@+id/tvHeader"
+    android:background="@drawable/lcars2"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vLayout">
+
+    <TextView android:text="@string/species_quiz" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="35sp"
+            android:id="@+id/tvTitle"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:text="@string/star_fleet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ff9900"
+        android:textSize="40sp"
+        android:id="@+id/tvHeader"
+        android:layout_gravity="right"
+        android:layout_marginTop="200sp" />
+
+    <EditText
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtName"
+        android:layout_gravity="center_horizontal|right"
+        android:hint="@string/your_name"
+        android:layout_marginTop="50sp" />
+
+    <Button
+        android:layout_width="178dp"
+        android:layout_height="60dp"
+        android:text="@string/start"
+        android:id="@+id/btnStart"
+        android:layout_gravity="center_horizontal|right"
+        android:layout_marginTop="50sp"
+        android:background="@drawable/button1" />
+
+</LinearLayout>

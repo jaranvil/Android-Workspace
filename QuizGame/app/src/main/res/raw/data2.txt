@@ -1,0 +1,17 @@
+Ferengi
+Gorn
+Human
+Klingon
+Romulan
+Trill
+Valtese
+Vulcan
+Andorian
+Bandi
+Borg
+Bajoran
+Cardassian
+Devore
+Maldorian
+Species 8472
+Ventu
