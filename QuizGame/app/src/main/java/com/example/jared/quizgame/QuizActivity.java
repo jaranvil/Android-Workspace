@@ -1,10 +1,13 @@
 package com.example.jared.quizgame;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ public class QuizActivity extends Activity {
     private TextView tvDescription;
     private TextView tvName;
     private TextView tvQuestionCount;
+    private TextView tvResult;
     private Button btn1;
     private Button btn2;
     private Button btn3;
@@ -50,6 +54,7 @@ public class QuizActivity extends Activity {
         tvName = (TextView) findViewById(R.id.tvName);
         tvQuestionCount = (TextView) findViewById(R.id.tvQuestionCount);
         tvDescription = (TextView)findViewById(R.id.tvDescription);
+        tvResult = (TextView) findViewById(R.id.tvResult);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
         btn3 = (Button) findViewById(R.id.btn3);
@@ -75,6 +80,29 @@ public class QuizActivity extends Activity {
         populateSpecies();
         shuffleMap(); // sets up questions<> and answers<> Lists
         nextQuestion();
+
+       setupListeners();
+
+    }
+
+    public void answer(String choice)
+    {
+        String result = "";
+        String answer = answers.get(question);
+
+        if (choice.equals(answers.get(question)))
+            result = "Success";
+        else {
+            result = "Wrong";
+        }
+
+
+        Intent i = new Intent("QuestionResult");//create intent object
+        Bundle extras = new Bundle();//create bundle object
+        extras.putString("RESULT", result);
+        extras.putString("ANSWER", answers.get(question));
+        i.putExtras(extras);
+        startActivityForResult(i, 1);
 
     }
 
@@ -181,4 +209,30 @@ public class QuizActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void setupListeners()
+    {
+        btn1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                answer(btn1.getText().toString());
+            }
+        });
+        btn2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                answer(btn2.getText().toString());
+            }
+        });
+        btn3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                answer(btn3.getText().toString());
+            }
+        });
+        btn4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                answer(btn4.getText().toString());
+            }
+        });
+    }
+
 }

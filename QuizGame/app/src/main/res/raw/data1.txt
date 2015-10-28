@@ -1,7 +1,7 @@
 Ferengi:There culture is characterized by a mercantile obsession with profit and trade, and their constant efforts to swindle unwary customers into unfair deals
 Gorn:They first appear in the original series episode, "Arena". A humanoid reptilian species that appear hostile to humans.
 Human:Bipedal creature found on Earth
-Klingon:A humanoid warrior species became a close ally of humanity and the United Federation of Planets in Star Trek: The Next Generation.
+Klingon:A humanoid warrior species became a close ally of humanity and the United Federation of Planets in Star Trek The Next Generation.
 Romulan:Generally depicted as antagonists, and are usually at war with or in an tenuous truce with the United Federation of Planets. On extremely rare occasions, they have allied with the Federation.
 Trill:A small percentage of the there population co-existed with a sentient symbiotic organism known as a symbiont inside their bodies.
 Valtese:They shared ancestry with the Kriosians but were, by 2368, less sentimental as a culture. The races do share a dark-spotted skin pattern along the hairline and down the neck and spine.
@@ -10,7 +10,7 @@ Andorian:Blue-skinned with white or silver hair, with a higher metabolic rate th
 Bandi:Inhabited the planet Deneb IV. Their technology was not particularly advanced, and their architecture was surprisingly simple.
 Borg:"...the ultimate user. They're unlike any threat your Federation has ever faced." – Q, 2365
 Bajoran:One of the oldest and richest cultures in the quadrant, though in the 24th century, they suffered greatly at the hands of the Cardassian Union.
-Cardassian:Played a key role in the storyline of the series, Star Trek: Deep Space Nine, as allies of the Dominion in the Dominion War.
+Cardassian:Played a key role in the storyline of the series, Star Trek Deep Space Nine, as allies of the Dominion in the Dominion War.
 Devore:A militaristic and highly xenophobic culture; all outsiders were labeled as "gaharey" and subjected to meticulous inspections while within their space.
 Species 8472:A tripedal and apparently highly xenophobic non-humanoid species. Originates from a dimension called fluidic space, accessible by quantum singularities
 Ventu:They are related to the Ledosians, who believe them to be representative of their evolutionary precursors. They have no spoken or written language and communicate through signs.

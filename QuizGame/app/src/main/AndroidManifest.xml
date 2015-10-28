@@ -20,8 +20,18 @@
             android:name=".QuizActivity"
             android:label="@string/title_activity_quiz" >
             <intent-filter>
-                <action android:name="QuizActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="QuizActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".QuestionResult"
+            android:label="@string/title_activity_question_result" >
+            <intent-filter>
+                <action android:name="QuestionResult" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

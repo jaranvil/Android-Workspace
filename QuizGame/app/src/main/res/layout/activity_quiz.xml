@@ -12,7 +12,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ensign Jared"
         android:id="@+id/tvName"
         android:layout_gravity="left|center_horizontal"
         android:layout_marginTop="50sp"
@@ -22,7 +21,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Question 1 of 10"
         android:id="@+id/tvQuestionCount"
         android:layout_gravity="left|center_horizontal" />
 
@@ -33,7 +31,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50sp"
         android:gravity="center"
-        android:text="orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when ..." />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -48,13 +46,15 @@
             android:layout_height="60sp"
             android:id="@+id/btn1"
             android:layout_marginRight="50sp"
-            android:background="@drawable/button2" />
+            android:background="@drawable/button2"
+            android:textSize="20sp" />
 
         <Button
             android:layout_width="150sp"
             android:layout_height="60sp"
             android:id="@+id/btn2"
-            android:background="@drawable/button2" />
+            android:background="@drawable/button2"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,14 +70,27 @@
             android:layout_height="60sp"
             android:id="@+id/btn3"
             android:layout_marginRight="50sp"
-            android:background="@drawable/button2" />
+            android:background="@drawable/button2"
+            android:textSize="20sp" />
 
         <Button
             android:layout_width="150sp"
             android:layout_height="60sp"
             android:id="@+id/btn4"
-            android:background="@drawable/button2" />
+            android:background="@drawable/button2"
+            android:textSize="20sp" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correct"
+        android:id="@+id/tvResult"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25sp"
+        android:textColor="#00ff00"
+        android:layout_marginTop="25sp"
+        android:visibility="invisible" />
 
 </LinearLayout>
 

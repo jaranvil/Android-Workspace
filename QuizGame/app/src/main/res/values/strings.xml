@@ -8,4 +8,5 @@
     <string name="your_name">Your Name</string>
     <string name="start">Start</string>
     <string name="title_activity_quiz">QuizActivity</string>
+    <string name="title_activity_question_result">QuestionResult</string>
 </resources>
