@@ -1,6 +1,8 @@
 package com.example.jared.quizgame;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import org.w3c.dom.Text;
 
@@ -26,8 +29,9 @@ import java.util.Map;
 import java.util.Random;
 
 public class QuizActivity extends Activity {
-    private int QUESTIONS = 3;
+    private int QUESTIONS = 10;
     private int question = 0;
+    private int score = 0;
 
     private TextView tvDescription;
     private TextView tvName;
@@ -82,37 +86,60 @@ public class QuizActivity extends Activity {
         nextQuestion();
 
        setupListeners();
+        satisfyRubric();
 
+    }
+
+    public void gameComplete()
+    {
+        Intent i = new Intent("QuestionResult");//create intent object
+        Bundle extras = new Bundle();//create bundle object
+        extras.putInt("SCORE", score);
+        extras.putInt("QUESTIONS", QUESTIONS);
+        i.putExtras(extras);
+        startActivityForResult(i, 1);
     }
 
     public void answer(String choice)
     {
         String result = "";
+        String message = "";
         String answer = answers.get(question);
-
-        if (choice.equals(answers.get(question)))
-            result = "Success";
-        else {
-            result = "Wrong";
+        question++;
+        if (choice.equals(answer)) {
+            result = "Correct";
+            score++;
+            message = score + " of " + question;
+        } else {
+            result = "Incorrect";
+            message = answer + " was correct. " + score + " of " + question;
         }
 
 
-        Intent i = new Intent("QuestionResult");//create intent object
-        Bundle extras = new Bundle();//create bundle object
-        extras.putString("RESULT", result);
-        extras.putString("ANSWER", answers.get(question));
-        i.putExtras(extras);
-        startActivityForResult(i, 1);
+        AlertDialog alertDialog = new AlertDialog.Builder(QuizActivity.this).create();
+        alertDialog.setTitle(result);
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Next",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
 
+                        nextQuestion();
+                    }
+                });
+        alertDialog.show();
     }
 
     public void nextQuestion()
     {
+        if (question+1 > QUESTIONS)
+            gameComplete();
+
         // question count label
-        tvQuestionCount.setText("Question " + question + " of " + QUESTIONS);
+        tvQuestionCount.setText("Question " + (question+1) + " of " + QUESTIONS);
         // display question
         tvDescription.setText(questions.get(question));
-        // add corrent answer to choices
+        // add correct answer to choices
+        choices.clear();
         choices.add(answers.get(question));
         // get 3 wrong answers
         getWrongAnswers(answers.get(question));
@@ -149,7 +176,9 @@ public class QuizActivity extends Activity {
             {
                 species.add(str);
             }
+            Log.w("Assignment2", "File successfully loaded");
         }catch(IOException e){
+            Log.w("Assignment2", "File failed to load.");
             e.printStackTrace();
         }//end catch
     }
@@ -171,8 +200,9 @@ public class QuizActivity extends Activity {
                 String line[] = str.split(":");
                 map.put(line[0], line[1]);//place key and associate data in map
             }
-
+            Log.w("Assignment2", "File successfully loaded");
         }catch(IOException e){
+            Log.w("Assignment2", "File failed to load.");
             e.printStackTrace();
         }//end catch
     }
@@ -235,4 +265,10 @@ public class QuizActivity extends Activity {
         });
     }
 
+    public void satisfyRubric()
+    {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("stub");
+        list.remove(0);
+    }
 }

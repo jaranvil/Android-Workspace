@@ -1,10 +1,13 @@
 package com.example.jared.quizgame;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -12,7 +15,7 @@ import org.w3c.dom.Text;
 public class QuestionResult extends Activity {
     TextView tvResult;
     TextView tvAnswer;
-
+    Button btnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,19 +24,24 @@ public class QuestionResult extends Activity {
 
         tvResult = (TextView) findViewById(R.id.tvResult);
         tvAnswer = (TextView) findViewById(R.id.tvAnswer);
+        btnHome = (Button) findViewById(R.id.btnHome);
 
         Bundle extras=getIntent().getExtras();
-        String name = "";
-        String answer = "";
+        int score = 0;
+        int questions = 0;
         if(extras != null)//if bundle has content
         {
-            name = extras.getString("RESULT");
-            answer = extras.getString("ANSWER");
-            tvResult.setText(name);
-            if (name.equals("Wrong"))
-                tvAnswer.setText("The answer was: " + answer);
+            score = extras.getInt("SCORE");
+            questions = extras.getInt("QUESTIONS");
+            tvResult.setText(score + " of " + questions);
+                tvAnswer.setText("");
         }
 
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivityForResult(new Intent("MainActivity"), 1);
+            }
+        });
     }
 
     @Override

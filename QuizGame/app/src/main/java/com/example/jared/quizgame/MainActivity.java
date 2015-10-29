@@ -1,6 +1,8 @@
 package com.example.jared.quizgame;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,12 +29,27 @@ public class MainActivity extends Activity {
                 //code using Intents go here
                 //startActivity(new Intent("ActivityTwo"));
 
-                Intent i = new Intent("QuizActivity");//create intent object
-                Bundle extras = new Bundle();//create bundle object
-                extras.putString("NAME", textName.getText().toString());//fill bundle
-                i.putExtras(extras);
-                startActivityForResult(i, 1);
+                String name = textName.getText().toString();
 
+                if (name.equals(""))
+                {
+                    final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("missing Name");
+                    alertDialog.setMessage("Please enter your name");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Next",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                } else {
+                    Intent i = new Intent("QuizActivity");//create intent object
+                    Bundle extras = new Bundle();//create bundle object
+                    extras.putString("NAME", textName.getText().toString());//fill bundle
+                    i.putExtras(extras);
+                    startActivityForResult(i, 1);
+                }
             }
         });//end listener inner class
     }

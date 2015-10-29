@@ -11,7 +11,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stub"
         android:id="@+id/tvResult"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="75sp"
@@ -20,7 +19,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="the corect anseer was stub"
         android:id="@+id/tvAnswer"
         android:layout_gravity="center_horizontal"
         android:textSize="25sp" />
@@ -28,9 +26,10 @@
     <Button
         android:layout_width="198dp"
         android:layout_height="78dp"
-        android:text="New Button"
-        android:id="@+id/button"
+        android:text="@string/home"
+        android:id="@+id/btnHome"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100sp"
-        android:background="@drawable/button1" />
+        android:background="@drawable/button1"
+        android:textSize="30sp" />
 </LinearLayout>

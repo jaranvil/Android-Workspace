@@ -5,26 +5,50 @@
     android:layout_below="@+id/tvHeader"
     android:layout_alignRight="@+id/tvHeader"
     android:layout_alignEnd="@+id/tvHeader"
-    android:background="@drawable/lcars2"
+    android:background="@drawable/lcars4"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/vLayout">
 
-    <TextView android:text="@string/species_quiz" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="35sp"
-            android:id="@+id/tvTitle"
-        android:layout_gravity="right" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="125sp"
+            android:layout_height="40sp"
+            android:id="@+id/btnOption1"
+            android:layout_gravity="right"
+            android:background="@drawable/blue_button"
+            android:layout_marginTop="40sp" />
+
+        <Button
+            android:layout_width="125sp"
+            android:layout_height="40sp"
+            android:id="@+id/btnOption2"
+            android:layout_gravity="right"
+            android:background="@drawable/blue_button"
+            android:layout_marginTop="2sp" />
+
+        <Button
+            android:layout_width="125sp"
+            android:layout_height="40sp"
+            android:id="@+id/btnOption3"
+            android:layout_gravity="center_horizontal|right"
+            android:background="@drawable/blue_button"
+            android:layout_marginTop="2sp" />
+    </LinearLayout>
 
     <TextView
         android:text="@string/star_fleet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ff9900"
-        android:textSize="40sp"
+        android:textColor="#0000ff"
+        android:textSize="45sp"
         android:id="@+id/tvHeader"
         android:layout_gravity="right"
-        android:layout_marginTop="200sp" />
+        android:layout_marginTop="100sp" />
 
     <EditText
         android:layout_width="296dp"
@@ -41,6 +65,6 @@
         android:id="@+id/btnStart"
         android:layout_gravity="center_horizontal|right"
         android:layout_marginTop="50sp"
-        android:background="@drawable/button1" />
+        android:background="@drawable/blue_button" />
 
 </LinearLayout>

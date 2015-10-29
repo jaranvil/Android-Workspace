@@ -6,7 +6,8 @@
     <string name="star_fleet">Login </string>
     <string name="species_quiz">Star Fleet Academy</string>
     <string name="your_name">Your Name</string>
-    <string name="start">Start</string>
+    <string name="start">Begint</string>
     <string name="title_activity_quiz">QuizActivity</string>
     <string name="title_activity_question_result">QuestionResult</string>
+    <string name="home">Home</string>
 </resources>
