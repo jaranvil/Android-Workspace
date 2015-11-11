@@ -1,0 +1,83 @@
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_box="all"
+        android:background="@raw/background"
+        android:id="@+id/frLayout">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ivCharacter"
+            android:layout_gravity="center"
+            android:background="@raw/face1"
+            android:layout_marginBottom="20dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tvMood"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tom"
+                android:id="@+id/tvAge"
+                android:textSize="18dp"
+                android:gravity="right"
+                android:layout_gravity="right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|bottom"
+            android:gravity="bottom"
+            android:padding="5dp">
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnFood"
+                android:layout_gravity="left|bottom"
+                android:background="@raw/food" />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnPoop"
+                android:layout_gravity="right|bottom"
+                android:background="@raw/poop" />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnLight"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@raw/light" />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnList"
+                android:layout_gravity="bottom"
+                android:background="@raw/list" />
+        </LinearLayout>
+    </FrameLayout>
+</android.support.wearable.view.BoxInsetLayout>
