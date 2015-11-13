@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Character Health"
+                android:text="Stats (stub)"
                 android:id="@+id/tvTitle"
                 android:layout_gravity="center_horizontal"
                 android:textSize="18dp" />
@@ -28,7 +28,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="food"
+                android:text="Age:"
+                android:id="@+id/tvAge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hunger"
                 android:id="@+id/textView" />
 
             <ProgressBar

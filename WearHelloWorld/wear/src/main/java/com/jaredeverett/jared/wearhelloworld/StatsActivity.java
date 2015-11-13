@@ -5,6 +5,8 @@ import android.support.wearable.activity.WearableActivity;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class StatsActivity extends WearableActivity {
 
     private TextView tvTitle;
@@ -13,11 +15,13 @@ public class StatsActivity extends WearableActivity {
     private ProgressBar prHygiene;
     private ProgressBar prEnergy;
     private TextView tvEnergy;
+    private TextView tvAge;
 
     // stats
     private int food;
     private int hygiene;
     private int energy;
+    private int age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class StatsActivity extends WearableActivity {
         prHygiene = (ProgressBar) findViewById(R.id.prHygiene);
         prEnergy = (ProgressBar) findViewById(R.id.prEnergy);
         tvEnergy = (TextView) findViewById(R.id.tvEnergy);
+        tvAge = (TextView) findViewById(R.id.tvAge);
 
         Bundle extras=getIntent().getExtras();
         if(extras != null)//if bundle has content
@@ -36,14 +41,18 @@ public class StatsActivity extends WearableActivity {
             this.food = extras.getInt("food");
             this.hygiene = extras.getInt("hygiene");
             this.energy = extras.getInt("energy");
+            this.age = extras.getInt("age");
 
             prFood.setProgress(food);
             prHygiene.setProgress(hygiene);
             prEnergy.setProgress(energy);
 
             tvEnergy.setText("Energy " + energy + "/" + "100");
+            tvAge.setText("Age: " + age + "m");
         }
     }
+
+
 
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
