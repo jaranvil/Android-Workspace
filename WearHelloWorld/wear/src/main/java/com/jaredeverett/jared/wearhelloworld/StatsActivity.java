@@ -10,18 +10,23 @@ import org.w3c.dom.Text;
 public class StatsActivity extends WearableActivity {
 
     private TextView tvTitle;
-
     private ProgressBar prFood;
     private ProgressBar prHygiene;
     private ProgressBar prEnergy;
+    private ProgressBar prEntertainment;
+    private ProgressBar prEducation;
     private TextView tvEnergy;
     private TextView tvAge;
+    private TextView tvMoney;
 
     // stats
     private int food;
     private int hygiene;
     private int energy;
     private int age;
+    private int coins;
+    private int entertainment;
+    private int education;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +37,11 @@ public class StatsActivity extends WearableActivity {
         prFood = (ProgressBar) findViewById(R.id.prFood);
         prHygiene = (ProgressBar) findViewById(R.id.prHygiene);
         prEnergy = (ProgressBar) findViewById(R.id.prEnergy);
+        prEntertainment = (ProgressBar) findViewById(R.id.prEntertainment);
+        prEducation = (ProgressBar) findViewById(R.id.prEducation);
         tvEnergy = (TextView) findViewById(R.id.tvEnergy);
         tvAge = (TextView) findViewById(R.id.tvAge);
+        tvMoney = (TextView) findViewById(R.id.tvMoney);
 
         Bundle extras=getIntent().getExtras();
         if(extras != null)//if bundle has content
@@ -42,13 +50,19 @@ public class StatsActivity extends WearableActivity {
             this.hygiene = extras.getInt("hygiene");
             this.energy = extras.getInt("energy");
             this.age = extras.getInt("age");
+            this.coins = extras.getInt("coins");
+            this.entertainment = extras.getInt("entertainment");
+            this.education = extras.getInt("education");
 
             prFood.setProgress(food);
             prHygiene.setProgress(hygiene);
             prEnergy.setProgress(energy);
+            prEntertainment.setProgress(entertainment);
+            prEducation.setProgress(education);
 
-            tvEnergy.setText("Energy " + energy + "/" + "100");
-            tvAge.setText("Age: " + age + "m");
+            tvEnergy.setText("Energy");
+            tvAge.setText(age + " days");
+            tvMoney.setText(Integer.toString(coins));
         }
     }
 

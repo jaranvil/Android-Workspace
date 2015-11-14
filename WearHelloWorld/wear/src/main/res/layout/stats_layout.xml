@@ -7,78 +7,171 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_box="all">
+        app:layout_box="all"
+        android:background="#555555">
 
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|top"
-            android:id="@+id/layout1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stats (stub)"
-                android:id="@+id/tvTitle"
-                android:layout_gravity="center_horizontal"
-                android:textSize="18dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Age:"
-                android:id="@+id/tvAge" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hunger"
-                android:id="@+id/textView" />
-
-            <ProgressBar
-                android:id="@+id/prFood"
-                style="@style/CustomProgressBar"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:progress="50"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:indeterminate="false" />
+                android:layout_height="fill_parent"
+                android:layout_gravity="right">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hygiene"
-                android:id="@+id/textView2" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left|top"
+                    android:id="@+id/layout1"
+                    android:layout_weight="0.5">
 
-            <ProgressBar
-                android:id="@+id/prHygiene"
-                style="@style/CustomProgressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:progress="50"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:indeterminate="false" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Puppy"
+                        android:id="@+id/tvType"
+                        android:textColor="#2680FF"
+                        android:textSize="20dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Energy"
-                android:id="@+id/tvEnergy" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Age:"
+                        android:id="@+id/tvAge"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#cccccc" />
 
-            <ProgressBar
-                android:id="@+id/prEnergy"
-                style="@style/CustomProgressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:progress="50"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:indeterminate="false" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IQ: 70"
+                        android:id="@+id/tvIQ"
+                        android:layout_marginTop="30dp"
+                        android:textColor="#cccccc" />
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1234"
+                            android:id="@+id/tvMoney"
+                            android:textColor="#cccccc" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/imageView"
+                            android:background="@drawable/coin" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hunger"
+                        android:id="@+id/textView"
+                        android:textColor="#cccccc" />
+
+                    <ProgressBar
+                        android:id="@+id/prFood"
+                        style="@style/CustomProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="50"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="false" />
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hygiene"
+                        android:id="@+id/textView2"
+                        android:textColor="#cccccc" />
+
+                    <ProgressBar
+                        android:id="@+id/prHygiene"
+                        style="@style/CustomProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="50"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Energy"
+                        android:id="@+id/tvEnergy"
+                        android:textColor="#cccccc" />
+
+                    <ProgressBar
+                        android:id="@+id/prEnergy"
+                        style="@style/CustomProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="50"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Entertainment"
+                        android:id="@+id/tvEntertainment"
+                        android:textColor="#cccccc" />
+
+                    <ProgressBar
+                        android:id="@+id/prEntertainment"
+                        style="@style/CustomProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="50"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Education"
+                        android:id="@+id/tvEducation"
+                        android:textColor="#cccccc" />
+
+                    <ProgressBar
+                        android:id="@+id/prEducation"
+                        style="@style/CustomProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="50"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="false" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
     </FrameLayout>
 </android.support.wearable.view.BoxInsetLayout>

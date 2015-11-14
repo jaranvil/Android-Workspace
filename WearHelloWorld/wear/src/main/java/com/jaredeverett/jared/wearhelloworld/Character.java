@@ -5,62 +5,98 @@ import android.widget.ImageView;
 import java.util.Random;
 
 public class Character {
-    // properties
-    private static final int REDUCE_FOOD_FACTOR = 150;
-    private static final int REDUCE_HYGIENE_FACTOR = 100;
-    private static final int REDUCE_ENERGY_FACTOR = 130;
+    // stats decrease rates
+    private static final int REDUCE_FOOD_FACTOR = 120;
+    private static final int REDUCE_HYGIENE_FACTOR = 175;
+    private static final int REDUCE_ENERGY_FACTOR = 200;
+    private static final int REDUCE_ENTERTAINMENT_FACTOR = 90;
+    private static final int REDUCE_EDUCATION_FACTOR = 105;
+
+    private static final int COIN_INCREASE = 360;
+    // stats increase rates
+    private static final int FEED_AMT = 25;
+    private static final int SHOWER_AMT = 50;
+    private static final int READ_AMT = 10;
+    private static final int PLAY_AMT = 40;
 
     // animation values
     private int[] eatingImages = {R.drawable.eat1, R.drawable.eat2, R.drawable.eat3, R.drawable.eat4};
-    //private int[] mainImaages = {R.drawable.face1, R.drawable.face2};
-    //private int[] deerImages = {R.drawable.deer1, R.drawable.deer2, R.drawable.deer3};
-    //private int[] snakeImages = {R.drawable.snake1, R.drawable.snake2, R.drawable.snake3};
-    private int[] dogImages = {R.drawable.happy1, R.drawable.happy3};
+
+    private int[] dogImages = {R.drawable.happy1, R.drawable.happy2};
+    private int[] deadImages = {R.drawable.rip};
+    private int[] bathImages = {R.drawable.bath1, R.drawable.bath2, R.drawable.bath3, R.drawable.bath4, R.drawable.bath5};
+    private int[] readImages = {R.drawable.read1, R.drawable.read2, R.drawable.read3, R.drawable.read4, R.drawable.read5};
+    private int[] sleepImages = {R.drawable.sleep1, R.drawable.sleep2, R.drawable.sleep3, R.drawable.sleep4};
+    private int[] playImages = {R.drawable.play1, R.drawable.play2, R.drawable.play3, R.drawable.play4};
     private boolean eating = false;
-    private int counter = 0;
-
-
+    private boolean showering = false;
+    private boolean reading = false;
+    protected boolean sleeping = false;
+    private boolean playing = false;
+    protected int counter = 0;
 
     private int age = 0;
+    protected int coins = 100;
 
     // health stats
     private int food = 0;
     private int hygiene = 0;
     private int energy = 0;
-    private int entertainment = 0;
-    private int education = 0;
+    protected int entertainment = 0;
+    protected int education = 0;
     private boolean sick = false;
     protected boolean dead = false;
 
     private int lsatUnixTime = 0;
 
     // contructor
-    public Character(int food, int hygiene, int energy, int age)
+    public Character(int food, int hygiene, int energy, int age, boolean day, int coins, int entertainment, int education)
     {
         this.food = food;
         this.hygiene = hygiene;
         this.energy = energy;
         this.age = age;
+        this.coins = coins;
+        this.entertainment = entertainment;
+        this.education = education;
+
+        if (!day)
+            sleeping = true;
     }
 
     public void draw(ImageView iv)
     {
+        int[] images;
         if (eating)
+            images = eatingImages;
+        else if (showering)
+            images = bathImages;
+        else if (reading)
+            images = readImages;
+        else if (playing)
+            images = playImages;
+        else if (dead) {
+            images = deadImages;
+            counter = 0;
+        }
+        else if (sleeping)
+            images = sleepImages;
+        else
+            images = dogImages;
+
+        iv.setBackgroundResource(images[counter]);
+        counter++;
+        if (counter > images.length-1)
         {
-            iv.setBackgroundResource(eatingImages[counter]);
-            counter++;
-            if (counter > eatingImages.length-1)
-            {
+            counter = 0;
+            if (eating)
                 eating = false;
-                counter = 0;
-            }
-        } else if (dead) {
-            iv.setBackgroundResource(R.drawable.rip);
-        } else {
-            iv.setBackgroundResource(dogImages[counter]);
-            counter++;
-            if (counter > dogImages.length-1)
-                counter = 0;
+            if (showering)
+                showering = false;
+            if (reading)
+                reading = false;
+            if (playing)
+                playing = false;
         }
     }
 
@@ -68,7 +104,9 @@ public class Character {
     {
         int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
         if (dob != 0) {
-            this.age = (currentTime - dob) / 60;
+            int min = (currentTime - dob) / 60;
+            int hours = min / 60;
+            this.age = hours/24;
         }
     }
 
@@ -92,52 +130,89 @@ public class Character {
 
     public void updateStats(int timeInterval, boolean day)
     {
-        reduceFood(timeInterval);
-        reduceHygiene(timeInterval);
-        modifyEnergy(timeInterval, day);
-    }
+        coins += timeInterval/COIN_INCREASE;
 
-    public void reduceFood(int timeInterval)
-    {
+        // reduce hunger
         int factor = timeInterval/REDUCE_FOOD_FACTOR;
         if (factor < 0)
             factor = 0;
         food -= factor;
         if (food < 0 )
             food = 0;
-    }
 
-    public void reduceHygiene(int timeInterval)
-    {
-        int factor = timeInterval/REDUCE_HYGIENE_FACTOR;
+        // reduce hygiene
+        factor = timeInterval/REDUCE_HYGIENE_FACTOR;
         if (factor < 0)
             factor = 0;
         hygiene -= factor;
         if (hygiene < 0 )
             hygiene = 0;
-    }
 
-    public void modifyEnergy(int timeInterval, boolean day)
-    {
-        int factor = timeInterval/REDUCE_ENERGY_FACTOR;
+        // reduce energy
+        factor = timeInterval/REDUCE_ENERGY_FACTOR;
         if (factor < 0)
             factor = 0;
-
         if (day)
             energy -= factor;
-        else
-            energy += factor;
-
         if (energy < 0 )
             energy = 0;
-        if (energy > 100)
-            energy = 100;
+
+        // reduce entertainment
+        factor = timeInterval/REDUCE_ENTERTAINMENT_FACTOR;
+        if (factor < 0)
+            factor = 0;
+        entertainment -= factor;
+        if (entertainment < 0 )
+            entertainment = 0;
+
+        // reduce education
+        factor = timeInterval/REDUCE_EDUCATION_FACTOR;
+        if (factor < 0)
+            factor = 0;
+        education -= factor;
+        if (education < 0 )
+            education = 0;
+    }
+
+    public String getNotificationActions(int interval)
+    {
+        int foodTemp = food;
+        int hygieneTemp = hygiene;
+        int energyTemp = energy;
+
+        // reduce hunger
+        int factor = interval/REDUCE_FOOD_FACTOR;
+        if (factor < 0)
+            factor = 0;
+        foodTemp -= factor;
+        if (foodTemp < 10)
+            return "food";
+
+        // reduce hygiene
+        factor = interval/REDUCE_HYGIENE_FACTOR;
+        if (factor < 0)
+            factor = 0;
+        hygieneTemp -= factor;
+        if (hygieneTemp < 10)
+            return "hygiene";
+
+        // reduce energy
+        factor = interval/REDUCE_ENERGY_FACTOR;
+        if (factor < 0)
+            factor = 0;
+        energyTemp -= factor;
+        if (energyTemp < 10)
+            return "energy";
+
+        return "";
     }
 
     public String getMood()
     {
         if (dead)
             return "";
+        if (sleeping)
+            return "Sleeping";
 
         String[] HAPPY = {"Happy", "Content", "Excited", "Satisfied", "Pleased"};
         String[] HUNGRY = {"Hungry", "Starving", "Famished"};
@@ -158,10 +233,10 @@ public class Character {
         return "";
     }
 
-    public void feed(int amt)
+    public void feed()
     {
         // increase food. limit at 100
-        this.food += amt;
+        this.food += FEED_AMT;
         if (food > 100)
             food = 100;
 
@@ -170,22 +245,41 @@ public class Character {
         eating = true;
     }
 
-    public void bath(int amt)
+    public void bath()
     {
-        this.hygiene += amt;
+        this.hygiene += SHOWER_AMT;
 
         if (hygiene > 100)
             hygiene = 100;
+
+        // for character drawing
+        counter = 0;
+        showering = true;
     }
 
-    public void sleep(int amt)
+    public void read()
     {
-        this.energy += amt;
+        this.education += READ_AMT;
 
-        if (energy > 100)
-            energy = 100;
+        if (education > 100)
+            education = 100;
+
+        // for character drawing
+        counter = 0;
+        reading = true;
     }
 
+    public void play()
+    {
+        this.entertainment += PLAY_AMT;
+
+        if (entertainment > 100)
+            entertainment = 100;
+
+        // for character drawing
+        counter = 0;
+        playing = true;
+    }
 
     // assessor and mutators
     public int getFood()

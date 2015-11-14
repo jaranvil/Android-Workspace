@@ -1,6 +1,7 @@
 package com.jaredeverett.jared.wearhelloworld;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
@@ -36,7 +37,14 @@ public class ActionActivity extends WearableActivity {
         btnFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishWithResult("feed");
+
+
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "Feed");
+                extras.putInt("amount", 25);
+                i.putExtras(extras);
+                startActivityForResult(i, 2);
             }
         });
 
@@ -53,6 +61,20 @@ public class ActionActivity extends WearableActivity {
                 finishWithResult("light");
             }
         });
+
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishWithResult("read");
+            }
+        });
+
+        btnEntertain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishWithResult("play");
+            }
+        });
     }
 
     private void finishWithResult(String action)
@@ -63,6 +85,20 @@ public class ActionActivity extends WearableActivity {
         intent.putExtras(conData);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("feed");
+                }
+                break;
+        }
     }
 
 
