@@ -7,7 +7,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_box="all">
+        app:layout_box="all"
+        android:background="#555555">
 
 
         <LinearLayout
@@ -24,7 +25,8 @@
                 android:text="Actions"
                 android:id="@+id/textView3"
                 android:layout_gravity="center_horizontal"
-                android:textSize="22dp" />
+                android:textSize="22dp"
+                android:textColor="#2680FF" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -79,10 +81,11 @@
                 <Button
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:id="@+id/btnMed"
-                    android:background="@raw/med"
+                    android:id="@+id/btnWork"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp" />
+                    android:layout_marginTop="15dp"
+                    android:textSize="20dp"
+                    android:background="@drawable/brief" />
             </LinearLayout>
 
         </LinearLayout>

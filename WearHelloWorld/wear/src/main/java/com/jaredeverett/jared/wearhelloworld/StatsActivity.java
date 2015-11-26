@@ -18,6 +18,7 @@ public class StatsActivity extends WearableActivity {
     private TextView tvEnergy;
     private TextView tvAge;
     private TextView tvMoney;
+    private TextView tvIQ;
 
     // stats
     private int food;
@@ -27,6 +28,7 @@ public class StatsActivity extends WearableActivity {
     private int coins;
     private int entertainment;
     private int education;
+    private int iq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class StatsActivity extends WearableActivity {
         tvEnergy = (TextView) findViewById(R.id.tvEnergy);
         tvAge = (TextView) findViewById(R.id.tvAge);
         tvMoney = (TextView) findViewById(R.id.tvMoney);
+        tvIQ = (TextView) findViewById(R.id.tvIQ);
 
         Bundle extras=getIntent().getExtras();
         if(extras != null)//if bundle has content
@@ -53,6 +56,7 @@ public class StatsActivity extends WearableActivity {
             this.coins = extras.getInt("coins");
             this.entertainment = extras.getInt("entertainment");
             this.education = extras.getInt("education");
+            this.iq = extras.getInt("iq");
 
             prFood.setProgress(food);
             prHygiene.setProgress(hygiene);
@@ -63,6 +67,7 @@ public class StatsActivity extends WearableActivity {
             tvEnergy.setText("Energy");
             tvAge.setText(age + " days");
             tvMoney.setText(Integer.toString(coins));
+            tvIQ.setText("IQ " + iq);
         }
     }
 

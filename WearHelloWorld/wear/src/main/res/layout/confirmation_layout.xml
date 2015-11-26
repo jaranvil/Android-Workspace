@@ -29,33 +29,65 @@
                 android:textColor="#2680FF"
                 android:textSize="30dp" />
 
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="20dp">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:id="@+id/imageView2"
-                    android:background="@drawable/coin" />
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="25"
+                    android:text="Cost: "
+                    android:id="@+id/tvCost"
+                    android:textSize="20dp"
+                    android:textColor="#2680FF"
+                    android:layout_marginLeft="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="25 coin"
                     android:id="@+id/tvAmount"
-                    android:textSize="28dp"
-                    android:textColor="#eeeeee" />
+                    android:textSize="20dp"
+                    android:textColor="#eeeeee"
+                    android:layout_marginLeft="5dp" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gain: "
+                    android:id="@+id/tvGainText"
+                    android:textSize="20dp"
+                    android:textColor="#2680FF"
+                    android:layout_marginLeft="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="hunger"
+                    android:id="@+id/tvGain"
+                    android:textSize="20dp"
+                    android:textColor="#eeeeee"
+                    android:layout_marginLeft="5dp" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp">
 
 
                 <Button

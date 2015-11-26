@@ -1,0 +1,33 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <fragment
+        android:id="@+id/frList"
+        android:name="com.example.jared.picselect.MyListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:name="com.example.jared.picselect.MyDialogFragment"
+        android:id="@+id/frImage"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
+        android:id="@+id/btnReset"
+        android:layout_gravity="center_horizontal" />
+
+
+</LinearLayout>
+
+

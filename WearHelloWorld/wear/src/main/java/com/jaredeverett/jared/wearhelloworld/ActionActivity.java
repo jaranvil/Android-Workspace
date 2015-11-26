@@ -19,7 +19,7 @@ public class ActionActivity extends WearableActivity {
     private Button btnRead;
     private Button btnShower;
     private Button btnLight;
-    private Button btnMed;
+    private Button btnWork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class ActionActivity extends WearableActivity {
         btnRead = (Button) findViewById(R.id.btnRead);
         btnShower = (Button) findViewById(R.id.btnShower);
         btnLight = (Button) findViewById(R.id.btnLight);
-        btnMed = (Button) findViewById(R.id.btnMed);
+        btnWork = (Button) findViewById(R.id.btnWork);
 
         btnFeed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,8 +41,7 @@ public class ActionActivity extends WearableActivity {
 
                 Intent i = new Intent("ConfirmationActivity");//create intent object
                 Bundle extras = new Bundle();//create bundle object
-                extras.putString("action", "Feed");
-                extras.putInt("amount", 25);
+                extras.putString("action", "feed");
                 i.putExtras(extras);
                 startActivityForResult(i, 2);
             }
@@ -51,28 +50,56 @@ public class ActionActivity extends WearableActivity {
         btnShower.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishWithResult("shower");
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "shower");
+                i.putExtras(extras);
+                startActivityForResult(i, 3);
             }
         });
 
         btnLight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishWithResult("light");
-            }
-        });
 
-        btnRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finishWithResult("read");
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "light");
+                i.putExtras(extras);
+                startActivityForResult(i, 4);
             }
         });
 
         btnEntertain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishWithResult("play");
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "play");
+                i.putExtras(extras);
+                startActivityForResult(i, 5);
+            }
+        });
+
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "read");
+                i.putExtras(extras);
+                startActivityForResult(i, 6);
+            }
+        });
+
+        btnWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent("ConfirmationActivity");//create intent object
+                Bundle extras = new Bundle();//create bundle object
+                extras.putString("action", "work");
+                i.putExtras(extras);
+                startActivityForResult(i, 7);
             }
         });
     }
@@ -96,6 +123,51 @@ public class ActionActivity extends WearableActivity {
 
                     if (confirm)
                         finishWithResult("feed");
+                }
+                break;
+            case 3:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("shower");
+                }
+                break;
+            case 4:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("light");
+                }
+                break;
+            case 5:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("play");
+                }
+                break;
+            case 6:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("read");
+                }
+                break;
+            case 7:
+                if (resultCode == RESULT_OK) {
+                    Bundle res = data.getExtras();
+                    boolean confirm = res.getBoolean("confirm", false);
+
+                    if (confirm)
+                        finishWithResult("work");
                 }
                 break;
         }

@@ -23,31 +23,66 @@ import java.util.Date;
 public class MainActivity extends WearableActivity {
 
     public static final String MyPREFERENCES = "MyPrefs";
-    public static final int SLEEP_DURATION = 100;
+
+    // production times
+    public static final int NOTIFICATION_DELAY = 7200;
+    public static final int SLEEP_DURATION = 300;
+    public static final int SHOWER_DURATION = 30;
+    public static final int PLAY_DURATION = 150;
+    public static final int READ_DURATION = 150;
+    public static final int WORK_DURATION = 300;
+
+    // testing times
+//    public static final int NOTIFICATION_DELAY = 300;
+//    public static final int SLEEP_DURATION = 60;
+//    public static final int SHOWER_DURATION = 60;
+//    public static final int PLAY_DURATION = 120;
+//    public static final int READ_DURATION = 120;
+//    public static final int WORK_DURATION = 120;
+
     // costs
     public static final int FEED_COST = 25;
 
-
+    Character character;
     SharedPreferences sharedpreferences;
 
+    // widgets
     private Button btnList;
     private Button btnAction;
+    private Button btnShop;
     private TextView tvAge;
     private TextView tvMood;
     private FrameLayout frLayout;
-
     private ImageView ivCharacter;
-    private boolean day = true;
-    Character character;
+
+
 
     Context c = this;
 
+    // timers for character stats drain
+    protected int foodTimer = 0;
+    protected int hygieneTimer = 0;
+    protected int energyTimer = 0;
+    protected int entertainmentTimer = 0;
+    protected int educationTimer = 0;
+
+    private int[] egg_images = {R.drawable.egg_1, R.drawable.egg_2, R.drawable.egg_3, R.drawable.egg_4, R.drawable.egg_5, R.drawable.egg_6, R.drawable.egg_7, R.drawable.egg_8};
+    private int eggNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setAmbientEnabled();
+
+        btnAction = (Button) findViewById(R.id.btnActions);
+        btnList = (Button) findViewById(R.id.btnList);
+        btnShop = (Button) findViewById(R.id.btnShop);
+        tvMood = (TextView) findViewById(R.id.tvMood);
+        tvAge = (TextView) findViewById(R.id.tvAge);
+        frLayout = (FrameLayout) findViewById(R.id.frLayout);
+
+        ivCharacter = (ImageView) findViewById(R.id.ivCharacter);
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -58,14 +93,6 @@ public class MainActivity extends WearableActivity {
             setupCharacter();
         }
 
-        btnAction = (Button) findViewById(R.id.btnActions);
-        btnList = (Button) findViewById(R.id.btnList);
-        tvMood = (TextView) findViewById(R.id.tvMood);
-        tvAge = (TextView) findViewById(R.id.tvAge);
-        frLayout = (FrameLayout) findViewById(R.id.frLayout);
-
-        ivCharacter = (ImageView) findViewById(R.id.ivCharacter);
-
         setupListeners();
 
         mHandler.postAtTime(rDealAndWait, SystemClock.uptimeMillis() + 400);
@@ -75,25 +102,21 @@ public class MainActivity extends WearableActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // get time elasped
-        int timeInterval = updateTimestamp();
-
-        // update day
-        day = sharedpreferences.getBoolean("day", true);
-        if (!day)
-            makeNight();
 
         // update character
-        character.updateStats(timeInterval, day);
+        //character.updateStats(timeInterval, day);
         character.setAge(sharedpreferences.getInt("dob", 0));
         updateSharedPrefs();
-        updateTextViews();
+        updateTextViews();// set time
 
         if (character.isDead()) {
             character.dead = true;
-            btnAction.setVisibility(View.GONE);
-            btnList.setVisibility(View.GONE);
+            resetAction();
+            hideControls();
         }
+
+        if (character.sleeping)
+            makeNight();
 
         // update mood
         tvMood.setText(character.getMood());
@@ -105,58 +128,199 @@ public class MainActivity extends WearableActivity {
     {
         public void run()
         {
+            // egg stage
+            if (character.generation == 0) {
+                if (eggNum < egg_images.length)
+                    ivCharacter.setBackgroundResource(egg_images[eggNum]);
+                if (eggNum > egg_images.length-1) {
+                    eggNum = 0;
+                    character.generation++;
+                    showControls();
+                    tvMood.setText(character.getMood());
+                }
+            }
+
+            // draw charavter
             character.draw(ivCharacter);
+
+            // repeat
             mHandler.postAtTime(this, SystemClock.uptimeMillis() + 300);
         }
     };
-
+    private int last = 0;
     // thread for notifications
     private final Handler notificationHandler = new Handler();
     private final Runnable notificationRunnable = new Runnable()
     {
         public void run()
         {
+            // reduce stats
+
+            int timeInterval = updateTimestamp();
+            foodTimer += timeInterval;
+            hygieneTimer += timeInterval;
+            energyTimer += timeInterval;
+            entertainmentTimer += timeInterval;
+            educationTimer += timeInterval;
+
+            if (foodTimer >= Character.REDUCE_FOOD_FACTOR) {
+                character.reduceFood(foodTimer);
+                foodTimer = 0;
+            }
+            if (hygieneTimer >= Character.REDUCE_HYGIENE_FACTOR) {
+                character.reduceHygiene(hygieneTimer);
+                hygieneTimer = 0;
+            }
+            if (energyTimer >= Character.REDUCE_ENERGY_FACTOR) {
+                character.reduceEnergy(energyTimer);
+                energyTimer = 0;
+            }
+            if (entertainmentTimer >= Character.REDUCE_ENTERTAINMENT_FACTOR) {
+                character.reduceEntertainment(entertainmentTimer);
+                entertainmentTimer = 0;
+            }
+            if (educationTimer >= Character.REDUCE_EDUCATION_FACTOR) {
+                character.reduceEducation(educationTimer);
+                educationTimer = 0;
+            }
+
+
             // sleep monitoring
-            if (!day) {
+            if (character.sleeping) {
                 int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
-                int sleepTime = sharedpreferences.getInt("sleepTime", 0);
+                int sleepTime = sharedpreferences.getInt("actionStart", 0);
                 if ((currentTime-sleepTime) > SLEEP_DURATION) {
-                    day = true;
                     makeDay();
                     // reset animation
                     character.sleeping = false;
                     character.counter = 0;
                     character.setEnergy(100);
-                    updateSharedPrefs();
 
                     notification("Krio Kritters", "Your kritter is awake!");
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putInt("lastNotification", currentTime);
-                    editor.apply();
+                    resetAction();
+                    tvMood.setText(character.getMood());
+                } else {
+                    int timeLeft = ((SLEEP_DURATION - (currentTime - sleepTime)) / 60)+1;
+                    if (timeLeft == 0)
+                        tvMood.setText("<1 min left");
+                    else
+                        tvMood.setText(timeLeft + " mins left");
+                }
+            }
+
+            // showering
+            if (character.showering) {
+                int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
+                int startTime = sharedpreferences.getInt("actionStart", 0);
+                if ((currentTime-startTime) > SHOWER_DURATION) {
+                    // reset animation
+                    character.showering = false;
+                    character.counter = 0;
+                    character.setHygiene(100);
+
+                    showControls();
+
+                    notification("Krio Kritters", "All clean");
+                    resetAction();
+                    tvMood.setText(character.getMood());
+                } else {
+                    int timeLeft = ((SHOWER_DURATION - (currentTime - startTime)) / 60)+1;
+                    if (timeLeft == 0)
+                        tvMood.setText("<1 min left");
+                    else
+                        tvMood.setText(timeLeft + " mins left");
+                }
+            }
+
+            // playing
+            if (character.playing) {
+                int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
+                int startTime = sharedpreferences.getInt("actionStart", 0);
+                if ((currentTime-startTime) > PLAY_DURATION) {
+                    // reset animation
+                    character.playing = false;
+                    character.counter = 0;
+                    character.play();
+
+                    showControls();
+
+                    notification("Krio Kritters", "Finished playing");
+                    resetAction();
+                    tvMood.setText(character.getMood());
+                } else {
+                    int timeLeft = ((PLAY_DURATION - (currentTime - startTime)) / 60)+1;
+                    if (timeLeft == 0)
+                        tvMood.setText("<1 min left");
+                    else
+                        tvMood.setText(timeLeft + " mins left");
+                }
+            }
+
+            // reading
+            if (character.reading) {
+                int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
+                int startTime = sharedpreferences.getInt("actionStart", 0);
+                if ((currentTime-startTime) > READ_DURATION) {
+                    // reset animation
+                    character.reading = false;
+                    character.counter = 0;
+
+                    int prevIQ = character.iq;
+                    character.read();
+
+                    showControls();
+
+                    notification("Krio Kritters", "Finished reading");
+                    resetAction();
+                    tvMood.setText(character.getMood());
+
+                    if (!(prevIQ % 10 == 0) && character.iq == 0) {
+                        info("promotion");
+                    }
+                } else {
+                    int timeLeft = ((READ_DURATION - (currentTime - startTime)) / 60)+1;
+                    if (timeLeft == 0)
+                        tvMood.setText("<1 min left");
+                    else
+                        tvMood.setText(timeLeft + " mins left");
+                }
+            }
+
+            // working
+            if (character.working) {
+                int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
+                int startTime = sharedpreferences.getInt("actionStart", 0);
+                if ((currentTime-startTime) > WORK_DURATION) {
+                    // reset animation
+                    character.working = false;
+                    character.counter = 0;
+                    character.work();
+
+                    showControls();
+
+                    notification("Krio Kritters", "Back from work!");
+                    resetAction();
+                    tvMood.setText(character.getMood());
+                } else {
+                    int timeLeft = ((WORK_DURATION - (currentTime - startTime)) / 60)+1;
+                    if (timeLeft == 0)
+                        tvMood.setText("<1 min left");
+                    else
+                        tvMood.setText(timeLeft + " mins left");
                 }
             }
 
             // stats notifications
-            String lastTime = (sharedpreferences.getString("time", "0"));
-            int last = Integer.parseInt(lastTime);
             int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
-            int difference = currentTime - last;
-
-            String option = character.getNotificationActions(difference);
-
             int lastNotification = sharedpreferences.getInt("lastNotification", 0);
-            if (currentTime > (lastNotification + 300)) {
-                if (option.equals("food")) {
+            if (currentTime > (lastNotification + NOTIFICATION_DELAY)) {
+                if (character.food > 1 && character.food < 10) {
+                    System.out.println("Notification at food: " + character.food);
                     notification("Krio Kritters", "Your kritter is hungry!");
-                } else if (option.equals("hygiene")) {
-                    notification("Krio Kritters", "Your kritter is dirty!");
                 }
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt("lastNotification", currentTime);
-                editor.apply();
             }
 
-
+            updateSharedPrefs();
 
             notificationHandler.postAtTime(this, SystemClock.uptimeMillis() + 10000);
         }
@@ -172,6 +336,8 @@ public class MainActivity extends WearableActivity {
 
     }
 
+    //---- Shared Preferences Methods --------
+
     public void newCharacter()
     {
         int DoB = (int) (long) (System.currentTimeMillis() / 1000L);
@@ -179,14 +345,21 @@ public class MainActivity extends WearableActivity {
         editor.putInt("food", 100);
         editor.putInt("hygiene", 100);
         editor.putInt("energy", 100);
+        editor.putInt("education", 10);
+        editor.putInt("entertainment", 10);
         editor.putInt("age", 0);
+        editor.putInt("coins", 100);
         editor.putInt("dob", DoB);
-        editor.putBoolean("day", true);
+        editor.putInt("generation", 0);
+        editor.putInt("iq", 75);
         editor.apply();
         setupCharacter();
 
-        btnAction.setVisibility(View.VISIBLE);
-        btnList.setVisibility(View.VISIBLE);
+        tvMood.setText(character.getMood());
+
+        frLayout.setBackgroundResource(R.drawable.background);
+
+        info("welcome");
     }
 
     public void setupCharacter()
@@ -198,21 +371,29 @@ public class MainActivity extends WearableActivity {
         int entertainment = sharedpreferences.getInt("entertainment", 100);
         int education = sharedpreferences.getInt("education", 100);
         int coins = sharedpreferences.getInt("coins", 0);
-        boolean day = sharedpreferences.getBoolean("day", true);
+        int generation = sharedpreferences.getInt("generation", 0);
+        int iq = sharedpreferences.getInt("iq", 70);
+        String action = sharedpreferences.getString("action", "");
 
-        character = new Character(food, hygiene, energy, age, day, coins, entertainment, education);
+        if (!action.equals("") || generation == 0) {
+            hideControls();
+        }
+
+        character = new Character(food, hygiene, energy, age, coins, entertainment, education, action, generation, iq);
     }
 
-    public void makeNight() {
-        frLayout.setBackgroundResource(R.drawable.night_bg);
-        btnAction.setVisibility(View.GONE);
-        btnList.setVisibility(View.GONE);
-    }
-
-    public void makeDay() {
-        frLayout.setBackgroundResource(R.drawable.background);
-        btnAction.setVisibility(View.VISIBLE);
-        btnList.setVisibility(View.VISIBLE);
+    public void updateSharedPrefs()
+    {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("food", character.getFood());
+        editor.putInt("hygiene", character.getHygiene());
+        editor.putInt("energy", character.getEnergy());
+        editor.putInt("entertainment", character.entertainment);
+        editor.putInt("education", character.education);
+        editor.putInt("coins", character.coins);
+        editor.putInt("generation", character.generation);
+        editor.putInt("iq", character.iq);
+        editor.apply();
     }
 
     // updates the last seen value in shared prefs
@@ -236,18 +417,61 @@ public class MainActivity extends WearableActivity {
         return difference;
     }
 
-    public void updateSharedPrefs()
+    public void setActionStart(String action)
     {
+        int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt("food", character.getFood());
-        editor.putInt("hygiene", character.getHygiene());
-        editor.putInt("energy", character.getEnergy());
-        editor.putInt("entertainment", character.entertainment);
-        editor.putInt("education", character.education);
-        editor.putInt("coins", character.coins);
-        editor.putBoolean("day", day);
+        editor.putInt("actionStart", currentTime);
+        editor.putString("action", action);
+        editor.apply();
+
+        btnAction.setBackgroundResource(R.drawable.cancel_button);
+    }
+
+    public void setNotificationTime()
+    {
+        int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt("lastNotification", currentTime);
         editor.apply();
     }
+
+    public void resetAction()
+    {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("action", "");
+        editor.apply();
+
+        btnAction.setBackgroundResource(R.drawable.actions);
+    }
+
+    public void makeNight() {
+        frLayout.setBackgroundResource(R.drawable.night_bg);
+        hideControls();
+    }
+
+    public void makeDay() {
+        frLayout.setBackgroundResource(R.drawable.background);
+        showControls();
+    }
+
+    public void hideControls()
+    {
+        btnAction.setVisibility(View.GONE);
+        btnList.setVisibility(View.GONE);
+        btnShop.setVisibility(View.GONE);
+    }
+
+    public void showControls()
+    {
+        btnAction.setVisibility(View.VISIBLE);
+        btnList.setVisibility(View.VISIBLE);
+        btnShop.setVisibility(View.VISIBLE);
+    }
+
+
+
+
 
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -297,6 +521,7 @@ public class MainActivity extends WearableActivity {
                 extras.putInt("education", character.education);
                 extras.putInt("age", character.getAge());
                 extras.putInt("coins", character.coins);
+                extras.putInt("iq", character.iq);
                 i.putExtras(extras);
                 startActivityForResult(i, 1);
             }
@@ -316,12 +541,15 @@ public class MainActivity extends WearableActivity {
         ivCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (character.dead) {
+                if (character.dead)
                     newCharacter();
-                }
+                if (character.generation == 0)
+                    eggNum++;
             }
         });
     }
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
@@ -331,28 +559,32 @@ public class MainActivity extends WearableActivity {
                     String result = res.getString("action");
 
                     if (result.equals("feed")) {
-                        if (character.coins > FEED_COST) {
+                        if (character.coins >= FEED_COST) {
                             character.feed();
                             character.coins -= FEED_COST;
                         } else
                             Toast.makeText(getApplicationContext(), "Not enough coin", Toast.LENGTH_SHORT).show();
 
                     } else if (result.equals("shower")) {
-                        character.bath();
+                        character.showering = true;
+                        setActionStart("shower");
+                        hideControls();
                     } else if (result.equals("read")) {
-                        character.read();
+                        character.reading = true;
+                        setActionStart("reading");
+                        hideControls();
                     } else if (result.equals("play")) {
-                        character.play();
+                        character.playing = true;
+                        setActionStart("playing");
+                        hideControls();
                     } else if (result.equals("light")) {
-                        day = false;
                         character.sleeping = true;
+                        setActionStart("sleep");
                         makeNight();
-
-                        int currentTime = (int) (long) (System.currentTimeMillis() / 1000L);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putInt("sleepTime", currentTime);
-                        editor.putBoolean("day", day);
-                        editor.apply();
+                    } else if (result.equals("work")) {
+                        character.working = true;
+                        setActionStart("working");
+                        hideControls();
                     }
                     updateSharedPrefs();
                 }
@@ -360,8 +592,19 @@ public class MainActivity extends WearableActivity {
         }
     }
 
+    public void info(String prompt)
+    {
+        Intent i = new Intent("NotificationActivity");//create intent object
+        Bundle extras = new Bundle();//create bundle object
+        extras.putString("prompt", prompt);
+        i.putExtras(extras);
+        startActivityForResult(i, 2);
+    }
+
     public void notification(String title, String text)
     {
+        setNotificationTime();
+
         int notificationId = 101;
         // Build intent for notification content
         Intent viewIntent = new Intent(this, MainActivity.class);

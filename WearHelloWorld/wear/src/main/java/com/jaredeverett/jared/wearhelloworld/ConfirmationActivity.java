@@ -6,6 +6,7 @@ import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class ConfirmationActivity extends WearableActivity {
 
     TextView tvAction;
     TextView tvAmount;
+    TextView tvGain;
     Button btnCancel;
     Button btnConfirm;
     String action = "";
@@ -32,6 +34,7 @@ public class ConfirmationActivity extends WearableActivity {
 
         tvAction = (TextView) findViewById(R.id.tvAction);
         tvAmount = (TextView) findViewById(R.id.tvAmount);
+        tvGain = (TextView) findViewById(R.id.tvGain);
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
         btnCancel= (Button) findViewById(R.id.btnCancel);
 
@@ -39,10 +42,33 @@ public class ConfirmationActivity extends WearableActivity {
         if(extras != null)//if bundle has content
         {
             this.action = extras.getString("action", "");
-            this.cost = extras.getInt("amount", 0);
 
-            tvAction.setText(action);
-            tvAmount.setText(Integer.toString(cost));
+            if (action.equals("feed")) {
+                tvAction.setText("Feed");
+                tvAmount.setText(Integer.toString(MainActivity.FEED_COST) + " coins");
+                tvGain.setText("hunger");
+            } else if (action.equals("shower")) {
+                tvAction.setText("Bath");
+                tvAmount.setText("1 min");
+                tvGain.setText("hygiene");
+            } else if (action.equals("light")) {
+                tvAction.setText("Sleep");
+                tvAmount.setText("10 min");
+                tvGain.setText("energy");
+            } else if (action.equals("play")) {
+                tvAction.setText("Play");
+                tvAmount.setText("5 min");
+                tvGain.setText("entertain");
+            } else if (action.equals("read")) {
+                tvAction.setText("Read");
+                tvAmount.setText("5 min");
+                tvGain.setText("education");
+            } else if (action.equals("work")) {
+                tvAction.setText("Work");
+                tvAmount.setText("15 min");
+                tvGain.setText("70 coin");
+            }
+
         }
 
 

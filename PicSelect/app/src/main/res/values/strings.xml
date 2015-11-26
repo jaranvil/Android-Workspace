@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PicSelect</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="reset">Reset</string>
+
+
+    <string-array name="names">
+        <item>Buster</item>
+        <item>Gob</item>
+        <item>Annyong</item>
+        <item>George</item>
+        <item>George Michael</item>
+        <item>Oscar</item>
+        <item>Tobias</item>
+        <item>Who?</item>
+
+    </string-array>
+</resources>

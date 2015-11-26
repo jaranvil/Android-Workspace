@@ -5,52 +5,69 @@ import android.widget.ImageView;
 import java.util.Random;
 
 public class Character {
-    // stats decrease rates
-    private static final int REDUCE_FOOD_FACTOR = 120;
-    private static final int REDUCE_HYGIENE_FACTOR = 175;
-    private static final int REDUCE_ENERGY_FACTOR = 200;
-    private static final int REDUCE_ENTERTAINMENT_FACTOR = 90;
-    private static final int REDUCE_EDUCATION_FACTOR = 105;
 
-    private static final int COIN_INCREASE = 360;
+    // Constants
+
+    // stats decrease rates
+    public static final int REDUCE_FOOD_FACTOR = 100;
+    public static final int REDUCE_HYGIENE_FACTOR = 200;
+    public static final int REDUCE_ENERGY_FACTOR = 125;
+    public static final int REDUCE_ENTERTAINMENT_FACTOR = 90;
+    public static final int REDUCE_EDUCATION_FACTOR = 1900;
     // stats increase rates
     private static final int FEED_AMT = 25;
-    private static final int SHOWER_AMT = 50;
-    private static final int READ_AMT = 10;
+    private static final int READ_AMT = 90;
     private static final int PLAY_AMT = 40;
+    private static final int WORK_SALARY = 75;
 
-    // animation values
-    private int[] eatingImages = {R.drawable.eat1, R.drawable.eat2, R.drawable.eat3, R.drawable.eat4};
+    // Graphics
+    private int[] normal_images;
+    private int[] sleeping_images;
+    private int[] eating_images;
+    private int[] reading_images;
+    private int[] bath_images;
+    private int[] work_images;
+    private int[] play_images;
 
-    private int[] dogImages = {R.drawable.happy1, R.drawable.happy2};
+    // baby kritter
+    private int[] kritter_normal = {R.drawable.kritter_normal_1, R.drawable.kritter_normal_2, R.drawable.kritter_normal_3, R.drawable.kritter_normal_4, R.drawable.kritter_normal_5, R.drawable.kritter_normal_6};
+    private int[] kritter_sleep = {R.drawable.kritter_sleep_1, R.drawable.kritter_sleep_2, R.drawable.kritter_sleep_3, R.drawable.kritter_sleep_4};
+    private int[] kritter_eat = {R.drawable.kriiter_eat_1, R.drawable.kriiter_eat_2, R.drawable.kriiter_eat_3, R.drawable.kriiter_eat_4, R.drawable.kriiter_eat_5, R.drawable.kriiter_eat_6};
+    // doe
+    private int[] doe_main = {R.drawable.doe1, R.drawable.doe2, R.drawable.doe3, R.drawable.doe4, R.drawable.doe5};
+    private int[] doe_work = {R.drawable.doe_work_1, R.drawable.doe_work_2, R.drawable.doe_work_3, R.drawable.doe_work_4, R.drawable.doe_work_5};
+    private int[] doe_reading = {R.drawable.doe_reading_1, R.drawable.doe_reading_2, R.drawable.doe_reading_3, R.drawable.doe_reading_4, R.drawable.doe_reading_5, R.drawable.doe_reading_6};
+    private int[] doe_bath = {R.drawable.doe_bath_1, R.drawable.doe_bath_2, R.drawable.doe_bath_3, R.drawable.doe_bath_4, R.drawable.doe_bath_5};
+    private int[] doe_sleep = {R.drawable.doe_sleep_1, R.drawable.doe_sleep_2, R.drawable.doe_sleep_3, R.drawable.doe_sleep_4};
+    private int[] doe_play = {R.drawable.doe_play_1, R.drawable.doe_play_2, R.drawable.doe_play_3, R.drawable.doe_play_4, R.drawable.doe_play_5, R.drawable.doe_play_6, R.drawable.doe_play_7};
+    private int[] doe_eat = {R.drawable.doe_eat_1, R.drawable.doe_eat_2, R.drawable.doe_eat_3, R.drawable.doe_eat_4, R.drawable.doe_eat_5, R.drawable.doe_eat_6, R.drawable.doe_eat_7, R.drawable.doe_eat_8, R.drawable.doe_eat_9};
+    // RIP
     private int[] deadImages = {R.drawable.rip};
-    private int[] bathImages = {R.drawable.bath1, R.drawable.bath2, R.drawable.bath3, R.drawable.bath4, R.drawable.bath5};
-    private int[] readImages = {R.drawable.read1, R.drawable.read2, R.drawable.read3, R.drawable.read4, R.drawable.read5};
-    private int[] sleepImages = {R.drawable.sleep1, R.drawable.sleep2, R.drawable.sleep3, R.drawable.sleep4};
-    private int[] playImages = {R.drawable.play1, R.drawable.play2, R.drawable.play3, R.drawable.play4};
+
     private boolean eating = false;
-    private boolean showering = false;
-    private boolean reading = false;
+    public boolean showering = false;
+    protected boolean reading = false;
     protected boolean sleeping = false;
-    private boolean playing = false;
+    protected boolean playing = false;
+    protected boolean working = false;
     protected int counter = 0;
 
+    // Stats
+
+    protected int generation = 0;
     private int age = 0;
     protected int coins = 100;
-
-    // health stats
-    private int food = 0;
-    private int hygiene = 0;
-    private int energy = 0;
+    protected int food = 0;
+    protected int hygiene = 0;
+    protected int energy = 0;
     protected int entertainment = 0;
     protected int education = 0;
+    protected int iq = 70;
     private boolean sick = false;
     protected boolean dead = false;
 
-    private int lsatUnixTime = 0;
-
     // contructor
-    public Character(int food, int hygiene, int energy, int age, boolean day, int coins, int entertainment, int education)
+    public Character(int food, int hygiene, int energy, int age, int coins, int entertainment, int education, String action, int generation, int iq)
     {
         this.food = food;
         this.hygiene = hygiene;
@@ -59,44 +76,81 @@ public class Character {
         this.coins = coins;
         this.entertainment = entertainment;
         this.education = education;
+        this.generation = generation;
+        this.iq = iq;
 
-        if (!day)
+        // set current action
+        if (action.equals("shower"))
+            showering = true;
+        else if (action.equals("playing"))
+            playing = true;
+        else if (action.equals("reading"))
+            reading = true;
+        else if (action.equals("working"))
+            working = true;
+        else if (action.equals("sleep"))
             sleeping = true;
+
     }
 
     public void draw(ImageView iv)
     {
+        // if the character is in the egg, the MainActivity draws it
+        if (generation == 0)
+            return;
+
+        // choose image set
+        if (generation == 1) {
+            normal_images = kritter_normal;
+            sleeping_images = kritter_sleep;
+            eating_images = kritter_eat;
+            reading_images = doe_reading;
+            bath_images = doe_bath;
+            work_images = doe_work;
+            play_images = doe_play;
+        } else if (generation == 2) {
+            normal_images = doe_main;
+            sleeping_images = doe_sleep;
+            eating_images = doe_eat;
+            reading_images = doe_reading;
+            bath_images = doe_bath;
+            work_images = doe_work;
+            play_images = doe_play;
+        }
+
+        // select image array for current animation
         int[] images;
         if (eating)
-            images = eatingImages;
+            images = eating_images;
         else if (showering)
-            images = bathImages;
+            images = bath_images;
         else if (reading)
-            images = readImages;
+            images = reading_images;
         else if (playing)
-            images = playImages;
+            images = play_images;
         else if (dead) {
             images = deadImages;
             counter = 0;
         }
         else if (sleeping)
-            images = sleepImages;
+            images = sleeping_images;
+        else if (working)
+            images = work_images;
         else
-            images = dogImages;
+            images = normal_images;
+
+        // double check the counter to prevent out of bounds errors
+        if (counter > images.length-1)
+            counter = 0;
 
         iv.setBackgroundResource(images[counter]);
         counter++;
+
         if (counter > images.length-1)
         {
             counter = 0;
             if (eating)
                 eating = false;
-            if (showering)
-                showering = false;
-            if (reading)
-                reading = false;
-            if (playing)
-                playing = false;
         }
     }
 
@@ -128,107 +182,93 @@ public class Character {
             return false;
     }
 
-    public void updateStats(int timeInterval, boolean day)
+//    public void updateStats(int timeInterval, boolean day)
+//    {
+//        coins += timeInterval/COIN_INCREASE;
+//
+//    }
+
+    public void reduceFood(int interval)
     {
-        coins += timeInterval/COIN_INCREASE;
-
-        // reduce hunger
-        int factor = timeInterval/REDUCE_FOOD_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        food -= factor;
-        if (food < 0 )
+        int temp = (interval/REDUCE_FOOD_FACTOR);
+        food -= temp;
+        if (food < 0)
             food = 0;
+        System.out.println("Interval: " + interval);
+        System.out.println("temp: " + temp);
+        System.out.println("Setting hunger to: " + food);
+    }
 
-        // reduce hygiene
-        factor = timeInterval/REDUCE_HYGIENE_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        hygiene -= factor;
+    public void reduceHygiene(int interval)
+    {
+        if (playing)
+            hygiene -= interval/(REDUCE_HYGIENE_FACTOR / 2);
+        else
+            hygiene -= interval/REDUCE_HYGIENE_FACTOR;
+
         if (hygiene < 0 )
             hygiene = 0;
+    }
 
-        // reduce energy
-        factor = timeInterval/REDUCE_ENERGY_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        if (day)
-            energy -= factor;
+    public void reduceEnergy(int interval)
+    {
+        if (working || playing)
+            energy -= interval/(REDUCE_ENERGY_FACTOR / 2);
+        else
+            energy -= interval/REDUCE_ENERGY_FACTOR;
+
         if (energy < 0 )
             energy = 0;
+    }
 
-        // reduce entertainment
-        factor = timeInterval/REDUCE_ENTERTAINMENT_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        entertainment -= factor;
+    public void reduceEntertainment(int interval)
+    {
+        if (working)
+            entertainment -= interval/(REDUCE_ENTERTAINMENT_FACTOR / 3);
+        else
+            entertainment -= interval/REDUCE_ENTERTAINMENT_FACTOR;
+
         if (entertainment < 0 )
             entertainment = 0;
+    }
 
-        // reduce education
-        factor = timeInterval/REDUCE_EDUCATION_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        education -= factor;
+    public void reduceEducation(int interval)
+    {
+        education -= interval/REDUCE_EDUCATION_FACTOR;
         if (education < 0 )
             education = 0;
     }
 
-    public String getNotificationActions(int interval)
-    {
-        int foodTemp = food;
-        int hygieneTemp = hygiene;
-        int energyTemp = energy;
-
-        // reduce hunger
-        int factor = interval/REDUCE_FOOD_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        foodTemp -= factor;
-        if (foodTemp < 10)
-            return "food";
-
-        // reduce hygiene
-        factor = interval/REDUCE_HYGIENE_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        hygieneTemp -= factor;
-        if (hygieneTemp < 10)
-            return "hygiene";
-
-        // reduce energy
-        factor = interval/REDUCE_ENERGY_FACTOR;
-        if (factor < 0)
-            factor = 0;
-        energyTemp -= factor;
-        if (energyTemp < 10)
-            return "energy";
-
-        return "";
-    }
-
     public String getMood()
     {
+        if (generation == 0)
+            return "Hatching";
         if (dead)
-            return "";
+            return "Dead";
         if (sleeping)
             return "Sleeping";
-
-        String[] HAPPY = {"Happy", "Content", "Excited", "Satisfied", "Pleased"};
-        String[] HUNGRY = {"Hungry", "Starving", "Famished"};
-        String[] DIRTY = {"Dirty"};
-        String[] TIRED = {"Tired", "Sleepy", "Fatigued"};
-
-        Random r = new Random();
+        if (showering)
+            return "Bathing";
+        if (playing)
+            return "Playing";
+        if (reading)
+            return "Reading";
+        if (working)
+            return "Working";
 
         if (food > 50 && hygiene > 50 && energy > 50) {
-            return HAPPY[r.nextInt(HAPPY.length)];
+            return "Content";
         } else if (food < hygiene && food < energy) {
-            return HUNGRY[r.nextInt(HUNGRY.length)];
+            if (food < 10)
+                return "Starving";
+            else if (food < 25)
+                return "Famished";
+            else
+                return "Hungry";
         } else if (hygiene < food && hygiene < energy) {
-            return DIRTY[r.nextInt(DIRTY.length)];
+            return "Dirty";
         } else if (energy < food && energy < hygiene) {
-            return TIRED[r.nextInt(TIRED.length)];
+            return "Tired";
         }
         return "";
     }
@@ -245,28 +285,15 @@ public class Character {
         eating = true;
     }
 
-    public void bath()
-    {
-        this.hygiene += SHOWER_AMT;
-
-        if (hygiene > 100)
-            hygiene = 100;
-
-        // for character drawing
-        counter = 0;
-        showering = true;
-    }
-
     public void read()
     {
         this.education += READ_AMT;
 
-        if (education > 100)
-            education = 100;
+        if (education >= 100) {
+            education = 0;
+            iq++;
+        }
 
-        // for character drawing
-        counter = 0;
-        reading = true;
     }
 
     public void play()
@@ -275,10 +302,11 @@ public class Character {
 
         if (entertainment > 100)
             entertainment = 100;
+    }
 
-        // for character drawing
-        counter = 0;
-        playing = true;
+    public void work()
+    {
+        this.coins += WORK_SALARY;
     }
 
     // assessor and mutators
