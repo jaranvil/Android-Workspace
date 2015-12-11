@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -28,14 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private GoogleApiClient client;
 
     protected ArrayList<Video> videos = new ArrayList<>();
+    ListView videoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Intent i = new Intent("VideoActivity");
-//        startActivity(i);
+
 
         try {
             String destPath = "/data/data/" + getPackageName() + "/database/MyDB";
@@ -71,9 +74,30 @@ public class MainActivity extends AppCompatActivity {
         {
             do{
                 videos.add(new Video(c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5)));
+                Toast.makeText(MainActivity.this, "adding video", Toast.LENGTH_SHORT).show();
             }while(c.moveToNext());
         }
         db.close();
+
+        setupVideoList();
+
+    }
+
+    public void setupVideoList()
+    {
+        String[] test = {"sdfdsf", "sdfsadf"};
+        VideoList adapter = new VideoList(MainActivity.this, videos, test);
+        videoList = (ListView) findViewById(R.id.lvVideoList);
+        videoList.setAdapter(adapter);
+        videoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                //Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                Intent i = new Intent("VideoActivity");
+                startActivity(i);
+            }
+        });
     }
 
     public void getVideos(Cursor c)
