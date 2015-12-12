@@ -36,8 +36,10 @@ public class VideoList extends ArrayAdapter<String>{
         int id = context.getResources().getIdentifier(videos.get(position).thumbnail, "drawable", context.getPackageName());
         imageView.setImageResource(id);
 
+        String description = videos.get(position).description.substring(0, 30) + "...";
+
         txtTitle.setText(videos.get(position).title);
-        tvDescription.setText(videos.get(position).description);
+        tvDescription.setText(description);
         imageView.setImageResource(id);
         return rowView;
     }

@@ -2,32 +2,59 @@
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:layout_below="@+id/video"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#000000">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <VideoView
-        android:id="@+id/video"
-        android:layout_centerHorizontal="true"
-        android:layout_width="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
-        android:layout_height="500dp" />
+        <VideoView
+            android:id="@+id/video"
+            android:layout_centerHorizontal="true"
+            android:layout_width="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_height="500dp" />
 
+    </FrameLayout>
 
-
-        <TextView
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#ffffff"
-            android:textSize="45dp" />
-    </LinearLayout>
+            android:id="@+id/tvTitle"
+            android:textSize="35dp"
+            android:gravity="left" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvDescription"
+        android:textSize="14dp" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rbRating"
+        android:layout_gravity="center_horizontal"
+        android:numStars="5"
+        android:rating="3" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        android:id="@+id/btnDelete"
+        android:layout_gravity="bottom"
+        android:background="#2196f3"
+        android:textColor="#ffffff"
+        android:textSize="18dp" />
+</LinearLayout>
 

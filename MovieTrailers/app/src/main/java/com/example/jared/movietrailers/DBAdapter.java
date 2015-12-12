@@ -82,12 +82,12 @@ public class DBAdapter {
         initialValues.put(KEY_VIDEO, video);
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
-//
-//    //delete a particular contact
-//    public boolean deleteContact(long rowId)
-//    {
-//        return db.delete(DATABASE_TABLE,KEY_ROWID + "=" + rowId,null) >0;
-//    }
+
+    //delete a particular contact
+    public boolean deleteVideo(long id)
+    {
+        return db.delete(DATABASE_TABLE,KEY_VIDEOID + "=" + id,null) >0;
+    }
 
     //retrieve all the contacts
     public Cursor getAllVideos()
@@ -107,15 +107,16 @@ public class DBAdapter {
 //        }
 //        return mCursor;
 //    }
-//
-//    //updates a contact
-//    public boolean updateContact(long rowId,String name,String email)
-//    {
-//        ContentValues cval = new ContentValues();
-//        cval.put(KEY_NAME, name);
-//        cval.put(KEY_EMAIL, email);
-//        return db.update(DATABASE_TABLE, cval, KEY_ROWID + "=" + rowId,null) >0;
-//    }
+
+
+    public boolean updateVideo(long videoId, float rating)
+    {
+        int intRating = (int) rating;
+        ContentValues cval = new ContentValues();
+        cval.put(KEY_RATING, intRating);
+
+        return db.update(DATABASE_TABLE, cval, KEY_VIDEOID+ "=" + videoId,null) >0;
+    }
 
 }//end class DBAdapter
 

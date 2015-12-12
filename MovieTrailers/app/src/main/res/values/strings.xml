@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MovieTrailers</string>
+
+    <string name="delete">Delete Trailer</string>
 </resources>

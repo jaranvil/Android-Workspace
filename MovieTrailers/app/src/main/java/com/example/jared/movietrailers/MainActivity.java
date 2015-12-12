@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,15 +31,106 @@ public class MainActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+    private DBAdapter db;
     protected ArrayList<Video> videos = new ArrayList<>();
-    ListView videoList;
+    private ListView videoList;
+    private Button btnRestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+        btnRestore = (Button) findViewById(R.id.btnRestore);
+
+        btnRestore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Contact
+                db.open();
+                long id = db.insertVideo("Contact (1997)","Dr. Ellie Arroway, after years of searching, finds conclusive radio proof of intelligent aliens, who send plans for a mysterious machine.", "contact", "contact");
+
+                id = db.insertVideo("The Martian","During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.", "martian", "martian");
+
+                id = db.insertVideo("Star Trek: First Contact","Captain Jean-Luc Picard (Patrick Stewart) and the crew of the newly commissioned Enterprise-E battle the insidious Borg to restore the rightful future of Earth.", "contact2", "contact2");
+                db.close();
+
+                loadMovies();
+                setupVideoList();
+            }
+
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupDB();
+        loadMovies();
+        setupVideoList();
+
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), 0);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setupVideoList()
+    {
+        // the list adapater needs a array the size of the list
+        // no idea why
+        String[] test = new String[videos.size()];
+
+        VideoList adapter = new VideoList(MainActivity.this, videos, test);
+        videoList = (ListView) findViewById(R.id.lvVideoList);
+        videoList.setAdapter(adapter);
+        videoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                //Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                Intent i = new Intent("VideoActivity");
+                Bundle extras = new Bundle();   //create bundle object
+                extras.putInt("id", videos.get(position).id);
+                extras.putString("title", videos.get(position).title);
+                extras.putString("description", videos.get(position).description);
+                extras.putString("video", videos.get(position).video);
+                extras.putInt("rating", videos.get(position).rating);
+                i.putExtras(extras);
+                startActivity(i);
+            }
+        });
+    }
+
+    public void loadMovies() {
+        videos.clear();
+        db.open();
+        Cursor c = db.getAllVideos();
+        if (c.moveToFirst())
+        {
+            do{
+                videos.add(new Video(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5)));
+            }while(c.moveToNext());
+        }
+        db.close();
+    }
+
+    public void setupDB()
+    {
 
         try {
             String destPath = "/data/data/" + getPackageName() + "/database/MyDB";
@@ -57,57 +149,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        DBAdapter db = new DBAdapter(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        db = new DBAdapter(this);
 
-        // INSERT
-//        db.open();
-//        long id = db.insertVideo("The Martian","A cool movie about Mars", "martian", "martian");
-//        db.close();
 
-        // SELECT
-        db.open();
-        Cursor c = db.getAllVideos();
-        if(c.moveToFirst())
-        {
-            do{
-                videos.add(new Video(c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5)));
-                Toast.makeText(MainActivity.this, "adding video", Toast.LENGTH_SHORT).show();
-            }while(c.moveToNext());
-        }
-        db.close();
 
-        setupVideoList();
 
-    }
 
-    public void setupVideoList()
-    {
-        String[] test = {"sdfdsf", "sdfsadf"};
-        VideoList adapter = new VideoList(MainActivity.this, videos, test);
-        videoList = (ListView) findViewById(R.id.lvVideoList);
-        videoList.setAdapter(adapter);
-        videoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                //Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
-                Intent i = new Intent("VideoActivity");
-                startActivity(i);
-            }
-        });
-    }
-
-    public void getVideos(Cursor c)
-    {
-
-        Toast.makeText(this,
-                "title: " + c.getString(0) + "\n" +
-                        "Description: " + c.getString(1) + "\n" +
-                        "video: " + c.getString(2),
-                Toast.LENGTH_LONG).show();
     }
 
     public void CopyDB(InputStream inputStream,OutputStream outputStream)
