@@ -10,18 +10,18 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class AnimatedView extends ImageView{
+public class AnimatedView extends View {
 
     // http://i.imgur.com/V5MpSWy.png
 
     private Context mContext;
-    private Handler h;
-    private final int FRAME_RATE = 30;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     // objest lists
@@ -33,9 +33,8 @@ public class AnimatedView extends ImageView{
     private int[] colors = {Color.parseColor("#00B800"), Color.parseColor("#FF4D4D"), Color.parseColor("#B166C9"), Color.parseColor("#FF9900"), Color.parseColor("#00CCFF"), Color.parseColor("#FFFF00")};
     private int[] avaliableColors = colors;
     private int levelColor;
-    private int level = 1;
-    private int lvlScore = 0;
-    private int totalScre = 0;
+    protected int level = 1;
+    protected int score = 0;
     private int moves = 0;
     private int movesAlphaVal = 50;
     private int homeTransitionX = 0;
@@ -52,26 +51,23 @@ public class AnimatedView extends ImageView{
     private boolean loading = true;
     private boolean homeTransition = false;
 
+    protected int width = 0;
+    protected int height = 0;
+
+    protected TextView tvMoves;
+
     public AnimatedView(Context context, AttributeSet attrs)  {
         super(context, attrs);
         mContext = context;
-        h = new Handler();
     }
-
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            invalidate();
-        }
-    };
 
     protected void onDraw(Canvas c) {
 
 
-        if (loading) {
-            loading = false;
-            setupHomescreen();
-        }
+//        if (loading) {
+//            loading = false;
+//            setupHomescreen();
+//        }
 
         if (lvlScreen) {
             drawLvlScreen(c, paint);
@@ -82,10 +78,6 @@ public class AnimatedView extends ImageView{
             paint.setColor(levelColor);
             //paint.setTextSize(setTextSize(Integer.toString(moves), (this.getWidth()) - 500, paint));
             paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.movesTextSize));
-
-            // print the remaining level moves on the background
-            paint.setAlpha(movesAlphaVal);
-            c.drawText(Integer.toString(moves), 0, this.getHeight()-100, paint);
 
             // draw balls
             paint.setColor(levelColor);
@@ -119,10 +111,6 @@ public class AnimatedView extends ImageView{
             }
         }
 
-
-
-       // c.drawColor(Color.BLACK);
-        h.postDelayed(r, FRAME_RATE);
     }
 
     public void drawLvlScreen(Canvas c, Paint p) {
@@ -181,44 +169,44 @@ public class AnimatedView extends ImageView{
         grayOutScreen(c, p);
 
        // paint.setTextSize(setTextSize("Level " + level + " Complate", (this.getWidth()) - 300, paint));grayOutScreen(c, p);
-        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlTextSize));
-        paint.setColor(Color.parseColor("#FFFFFF"));
-        c.drawText("Level " + level, 10, this.getHeight() / 3, paint);
-        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
-        c.drawText("Complete!", 10, (this.getHeight() / 3)+100, paint);
-
-        int totalPossibleScore = (this.getWidth() * this.getHeight())/1000;
-        int percent = ((lvlScore*100)/totalPossibleScore);
-
-        int cell = this.getWidth() / 5;
-        int starY = (this.getHeight()/2) + 50;
-
-        if (percent < 50) {
-            c.drawBitmap(gold_star, 10, starY, paint);
-            c.drawBitmap(gray_star, 10 + cell, starY, paint);
-            c.drawBitmap(gray_star, 10 + (cell*2), starY, paint);
-        } else if (percent < 80) {
-            c.drawBitmap(gold_star, 10, starY, paint);
-            c.drawBitmap(gold_star, 10+cell, starY, paint);
-            c.drawBitmap(gray_star, 10+(cell*2), starY, paint);
-        } else {
-            c.drawBitmap(gold_star, 10, starY, paint);
-            c.drawBitmap(gold_star, 10+cell, starY, paint);
-            c.drawBitmap(gold_star, 10 + (cell*2), starY, paint);
-        }
+//        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlTextSize));
+//        paint.setColor(Color.parseColor("#FFFFFF"));
+//        c.drawText("Level " + level, 10, this.getHeight() / 3, paint);
+//        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
+//        c.drawText("Complete!", 10, (this.getHeight() / 3)+100, paint);
+//
+//        int totalPossibleScore = (this.getWidth() * this.getHeight())/1000;
+//        int percent = ((score*100)/totalPossibleScore);
+//
+//        int cell = this.getWidth() / 5;
+//        int starY = (this.getHeight()/2) + 50;
+//
+//        if (percent < 50) {
+//            c.drawBitmap(gold_star, 10, starY, paint);
+//            c.drawBitmap(gray_star, 10 + cell, starY, paint);
+//            c.drawBitmap(gray_star, 10 + (cell*2), starY, paint);
+//        } else if (percent < 80) {
+//            c.drawBitmap(gold_star, 10, starY, paint);
+//            c.drawBitmap(gold_star, 10+cell, starY, paint);
+//            c.drawBitmap(gray_star, 10+(cell*2), starY, paint);
+//        } else {
+//            c.drawBitmap(gold_star, 10, starY, paint);
+//            c.drawBitmap(gold_star, 10+cell, starY, paint);
+//            c.drawBitmap(gold_star, 10 + (cell*2), starY, paint);
+//        }
     }
 
     public void drawGameOver(Canvas c, Paint p) {
         grayOutScreen(c, p);
         int totalPossibleScore = ((this.getWidth() * this.getHeight())/1000) * level;
-        int percent = ((totalScre*100)/totalPossibleScore);
+        int percent = ((score*100)/totalPossibleScore);
 
         //paint.setTextSize(setTextSize("No More Moves", (this.getWidth()) - 300, paint));
         paint.setColor(Color.parseColor("#FFFFFF"));
         paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
         c.drawText("No More Moves :(", 10, this.getHeight()/3, p);
         paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.finalScoreTextSize));
-        c.drawText("Final Score: " + totalScre + " (" + percent + "%)", 10, (this.getHeight()/3)+100, p);
+        c.drawText("Final Score: " + score + " (" + percent + "%)", 10, (this.getHeight()/3)+100, p);
 
 
 //        int starsY = 675;
@@ -269,32 +257,31 @@ public class AnimatedView extends ImageView{
     }
 
     public void drawStats(Canvas c, Paint p) {
-        p.setColor(Color.parseColor("#111111"));
-        int yVal = 100;
-        if (this.getWidth() < 500) {
-            yVal = 50;
-            c.drawRect(0, 0, this.getWidth(), 75, p);
-        } else
-            c.drawRect(0, 0, this.getWidth(), 150, p);
-
-        p.setColor(levelColor);
-        int possibleScore = ((this.getWidth() * this.getHeight()) / 1000) - ((this.getWidth()*150)/1000);
-        int percent = ((lvlScore * 100) / possibleScore);
-        //paint.setTextSize(setTextSize("Level score " + lvlScore + " (" + percent + "%)", (this.getWidth()) - 300, p));
-        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.statsTextSize));
-
-        // this'll do
-        if (percent == 99)
-            percent = 100;
-
-        c.drawText("Level " + level + "     Score " + percent + "%", 25, yVal, p);
+//        p.setColor(Color.parseColor("#111111"));
+//        int yVal = 100;
+//        if (this.getWidth() < 500) {
+//            yVal = 50;
+//            c.drawRect(0, 0, this.getWidth(), 75, p);
+//        } else
+//            c.drawRect(0, 0, this.getWidth(), 150, p);
+//
+//        p.setColor(levelColor);
+//        int possibleScore = ((this.getWidth() * this.getHeight()) / 1000) - ((this.getWidth()*150)/1000);
+//        int percent = ((lvlScore * 100) / possibleScore);
+//        //paint.setTextSize(setTextSize("Level score " + lvlScore + " (" + percent + "%)", (this.getWidth()) - 300, p));
+//        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.statsTextSize));
+//
+//        if (percent == 99)
+//            percent = 100;
+//
+//        c.drawText("Level " + level + "     Score " + percent + "%", 25, yVal, p);
     }
 
     public void grayOutScreen(Canvas c, Paint p) {
         paint.setColor(Color.parseColor("#000000"));
         paint.setAlpha(95);
         float left = 0;
-        float top = 150;
+        float top = 0;
         float right = this.getWidth();
         float bottom = this.getHeight();
         if (this.getWidth() < 500)
@@ -317,9 +304,6 @@ public class AnimatedView extends ImageView{
         levelColor = colors[rnd.nextInt(colors.length)];
         moves = 1 + level*2;
         movesAlphaVal = 50;
-
-        totalScre += lvlScore;
-        lvlScore = 0;
 
         for (int i = 0;i < 1+(level*2);i++) {
             balls.add(new Ball(this.getWidth(), this.getHeight(), level, levelColor));
@@ -351,10 +335,7 @@ public class AnimatedView extends ImageView{
             } else {
                 moves--;
 
-                // slowly make the moves remaining number more visible
-                movesAlphaVal = 100 - ((moves - 1)*10);
-                if (movesAlphaVal < 10)
-                    movesAlphaVal = 10;
+                tvMoves.setText(moves + " moves");
 
                 createLine(x, y);
             }
@@ -427,10 +408,7 @@ public class AnimatedView extends ImageView{
             }
 
             // top boundary
-            if (this.getWidth() < 500)
-                topBound = 75;
-            else
-                topBound = 150;
+            topBound = 0;
             for (int i = y; i > 0;i--) {
                 for (int ii = 0;ii < lines.size();ii++) {
                     int x1 = lines.get(ii).getX1();
@@ -529,7 +507,7 @@ public class AnimatedView extends ImageView{
                 if (!balls.get(i).alone) {
                     balls.get(i).alone = true;
                     tiles.add(new ScoreTiles(t1, b1, r1, l1));
-                    lvlScore += tiles.get(tiles.size()-1).score;
+                    score += tiles.get(tiles.size()-1).score;
 
                 }
 

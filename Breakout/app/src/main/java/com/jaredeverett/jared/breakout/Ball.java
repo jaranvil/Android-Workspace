@@ -21,7 +21,7 @@ public class Ball {
     // boundaries
     protected int leftBound = 0;
     protected int rightBound;
-    protected int topBound = 150;
+    protected int topBound = 0;
     protected int bottomBound;
 
     // other properties
@@ -43,7 +43,6 @@ public class Ball {
         // for smaller screens
         if (width < 500) {
             radius=10;
-            topBound = 75;
             SPEED = 2 + rnd.nextInt(10+(level*2));
         }
 

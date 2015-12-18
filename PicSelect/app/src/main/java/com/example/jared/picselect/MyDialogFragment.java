@@ -25,32 +25,6 @@ public class MyDialogFragment extends DialogFragment {
             R.drawable.who
     };
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int mNum = 3;
-
-        // Pick a style based on the num.
-        int style = DialogFragment.STYLE_NORMAL, theme = 0;
-        switch (mNum) {
-            case 1: style = DialogFragment.STYLE_NO_TITLE; break;
-            case 2: style = DialogFragment.STYLE_NO_FRAME; break;
-            case 3: style = DialogFragment.STYLE_NO_INPUT; break;
-            case 4: style = DialogFragment.STYLE_NORMAL; break;
-            case 5: style = DialogFragment.STYLE_NORMAL; break;
-            case 6: style = DialogFragment.STYLE_NO_TITLE; break;
-            case 7: style = DialogFragment.STYLE_NO_FRAME; break;
-            case 8: style = DialogFragment.STYLE_NORMAL; break;
-        }
-        switch (mNum) {
-            case 1: theme = android.R.style.Theme_Holo; break;
-            case 2: theme = android.R.style.Theme_Holo_Light_Dialog; break;
-            case 3: theme = android.R.style.Theme_Holo_Light; break;
-            case 4: theme = android.R.style.Theme_Holo_Light_Panel; break;
-            case 5: theme = android.R.style.Theme_Holo_Light; break;
-        }
-        setStyle(style, theme);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,19 +32,6 @@ public class MyDialogFragment extends DialogFragment {
         ivImage = (ImageView) view.findViewById(R.id.ivImage);
         return view;
     }
-
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-////        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.names, android.R.layout.simple_list_item_1);
-////        setListAdapter(adapter);
-////        getListView().setOnItemClickListener(this);
-//    }
-//
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-//        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
-//    }
 
     public void showImage(int pos)
     {

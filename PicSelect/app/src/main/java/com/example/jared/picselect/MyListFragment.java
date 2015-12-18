@@ -40,8 +40,6 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
         if (avliable) {
             ((MainActivity)getActivity()).showImage(position);
             adapter.notifyDataSetChanged();
-        } else {
-
         }
 
     }

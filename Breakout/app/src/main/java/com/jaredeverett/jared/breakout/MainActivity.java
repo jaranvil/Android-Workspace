@@ -1,22 +1,44 @@
 package com.jaredeverett.jared.breakout;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.jaredeverett.jared.breakout.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView btnStartGame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         setContentView(R.layout.activity_main);
+
+        btnStartGame = (TextView) findViewById(R.id.btnStartGame);
+
+        btnStartGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent("GameActivity");
+                //Bundle extras = new Bundle();   //create bundle object
+                //extras.putInt("id", videos.get(position).id);
+                //i.putExtras(extras);
+                startActivity(i);
+            }
+        });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
