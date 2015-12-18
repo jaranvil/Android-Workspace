@@ -1,5 +1,7 @@
 package com.jaredeverett.jared.breakout;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.jaredeverett.jared.breakout.R;
@@ -15,7 +19,10 @@ import com.jaredeverett.jared.breakout.R;
 public class GameActivity extends AppCompatActivity {
 
     private Handler h;
+    protected SharedPreferences prefs;
     private final int FRAME_RATE = 30;
+
+
     private AnimatedView gameCanvas;
     private TextView tvStats;
     private TextView tvMoves;
@@ -34,29 +41,46 @@ public class GameActivity extends AppCompatActivity {
         tvStats = (TextView) findViewById(R.id.tvStats);
         tvMoves = (TextView) findViewById(R.id.tvMoves);
 
+        prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+
         h.postAtTime(r, SystemClock.uptimeMillis() + 400);
     }
 
     private Runnable r = new Runnable() {
         @Override
         public void run() {
-            // draw
-            gameCanvas.invalidate();
-
             // give canvas some info
             gameCanvas.width = gameCanvas.getWidth();
             gameCanvas.height = gameCanvas.getHeight();
             gameCanvas.tvMoves = tvMoves;
+
+            // draw
+            gameCanvas.invalidate();
 
             if (gameCanvas.score > score)
                 increaseScore();
 
             score = gameCanvas.score;
 
-            //updateGameStats();
-            h.postDelayed(r, FRAME_RATE);
+            if (gameCanvas.gameOver) {
+                h.removeCallbacks(r);
+                gameOver();
+            } else {
+                h.postDelayed(r, FRAME_RATE);
+            }
         }
     };
+
+    public void gameOver()
+    {
+        int count = prefs.getInt("count", 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(Integer.toString(count+1), score);
+        editor.putInt("count", count+1);
+        editor.apply();
+
+        finish();
+    }
 
     public void increaseScore()
     {
@@ -83,7 +107,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 tvStats.post(new Runnable() {
                     public void run() {
-                        tvStats.setTextColor(Color.parseColor("#00CCFF"));
+                        tvStats.setTextColor(Color.parseColor("#ff9900"));
                         //tvStats.setAlpha(1f);
                     }
                 });

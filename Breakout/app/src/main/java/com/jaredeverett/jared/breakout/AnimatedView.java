@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ public class AnimatedView extends View {
 
     private Context mContext;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Animation animation;
 
     // objest lists
     private ArrayList<Ball> balls = new ArrayList<>();
@@ -46,7 +49,7 @@ public class AnimatedView extends View {
     //game states
     private boolean lvlScreen = true;
     private boolean lvlComplete = false;
-    private boolean gameOver = false;
+    protected boolean gameOver = false;
     private boolean newGame = true;
     private boolean loading = true;
     private boolean homeTransition = false;
@@ -64,14 +67,15 @@ public class AnimatedView extends View {
     protected void onDraw(Canvas c) {
 
 
-//        if (loading) {
-//            loading = false;
-//            setupHomescreen();
-//        }
+        if (loading) {
+            loading = false;
+            level++;
+            startLvl();
+        }
 
-        if (lvlScreen) {
-            drawLvlScreen(c, paint);
-        } else {
+//        if (lvlScreen) {
+//            drawLvlScreen(c, paint);
+       // } else {
             c.drawColor(Color.parseColor("#555555"));
             drawStats(c, paint);
 
@@ -103,67 +107,69 @@ public class AnimatedView extends View {
             if (checkForWin()) {
                 lvlComplete = true;
                 drawLvlComplete(c, paint);
+                tvMoves.setTextColor(Color.parseColor("#ffffff"));
+                tvMoves.setText("");
             }
 
             if (moves <= 0 && !lvlComplete) {
                 drawGameOver(c, paint);
                 gameOver = true;
             }
-        }
+     //   }
 
     }
 
-    public void drawLvlScreen(Canvas c, Paint p) {
-        int x = homeTransitionX;
-        if (homeTransition) {
-            homeTransitionX-=50;
-            x-=50;
-
-            for (int i=0;i<balls.size();i++) {
-                balls.get(i).stayInBounds = false;
-                balls.get(i).SPEED = 50;
-            }
-
-            if (x < (0 - this.getWidth())) {
-                homeTransition = false;
-                lvlScreen = false;
-                homeTransitionX = 0;
-                startLvl();
-            }
-        }
-
-        c.drawColor(Color.parseColor("#000000"));
-
-        if (homeTransition) {
-            paint.setColor(Color.parseColor("#555555"));
-            c.drawRect(this.getWidth()+x, 0, this.getWidth(), this.getHeight(), paint);
-        }
-
-        // draw balls
-        paint.setColor(levelColor);
-        paint.setStyle(Paint.Style.FILL);
-        for (int i = 0;i < balls.size();i++) {
-            balls.get(i).draw(c, paint, lines, this.getWidth(), this.getHeight());
-        }
-
-        p.setColor(Color.parseColor("#FFFFFF"));
-        //p.setStyle(Paint.Style.STROKE);
-
-        c.drawBitmap(title, x, 100, paint);
-
-        p.setColor(Color.parseColor("#ffffff"));
-       // p.setStyle(Paint.Style.STROKE);
-
-        int y = this.getHeight()/2;
-
-        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.instructionsTextSize));
-        c.drawText("Separate balls by dividing cells.", x, y, paint);
-        c.drawText("There are a limited number of ", x, y+50, paint);
-        c.drawText("allowed moves per level. ", x, y+100, paint);
-
-        p.setTextSize(setTextSize("tap to start", (this.getWidth()) - 500, p));
-        c.drawText("tap to start", x, this.getHeight()-150, paint);
-    }
+//    public void drawLvlScreen(Canvas c, Paint p) {
+//        int x = homeTransitionX;
+//        if (homeTransition) {
+//            homeTransitionX-=50;
+//            x-=50;
+//
+//            for (int i=0;i<balls.size();i++) {
+//                balls.get(i).stayInBounds = false;
+//                balls.get(i).SPEED = 50;
+//            }
+//
+//            if (x < (0 - this.getWidth())) {
+//                homeTransition = false;
+//                lvlScreen = false;
+//                homeTransitionX = 0;
+//                startLvl();
+//            }
+//        }
+//
+//        c.drawColor(Color.parseColor("#000000"));
+//
+//        if (homeTransition) {
+//            paint.setColor(Color.parseColor("#555555"));
+//            c.drawRect(this.getWidth()+x, 0, this.getWidth(), this.getHeight(), paint);
+//        }
+//
+//        // draw balls
+//        paint.setColor(levelColor);
+//        paint.setStyle(Paint.Style.FILL);
+//        for (int i = 0;i < balls.size();i++) {
+//            balls.get(i).draw(c, paint, lines, this.getWidth(), this.getHeight());
+//        }
+//
+//        p.setColor(Color.parseColor("#FFFFFF"));
+//        //p.setStyle(Paint.Style.STROKE);
+//
+//        c.drawBitmap(title, x, 100, paint);
+//
+//        p.setColor(Color.parseColor("#ffffff"));
+//       // p.setStyle(Paint.Style.STROKE);
+//
+//        int y = this.getHeight()/2;
+//
+//        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.instructionsTextSize));
+//        c.drawText("Separate balls by dividing cells.", x, y, paint);
+//        c.drawText("There are a limited number of ", x, y+50, paint);
+//        c.drawText("allowed moves per level. ", x, y+100, paint);
+//
+//        p.setTextSize(setTextSize("tap to start", (this.getWidth()) - 500, p));
+//        c.drawText("tap to start", x, this.getHeight()-150, paint);
+//    }
 
     public void drawLvlComplete(Canvas c, Paint p) {
         grayOutScreen(c, p);
@@ -204,9 +210,7 @@ public class AnimatedView extends View {
         //paint.setTextSize(setTextSize("No More Moves", (this.getWidth()) - 300, paint));
         paint.setColor(Color.parseColor("#FFFFFF"));
         paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.lvlCompleteTextSize));
-        c.drawText("No More Moves :(", 10, this.getHeight()/3, p);
-        paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.finalScoreTextSize));
-        c.drawText("Final Score: " + score + " (" + percent + "%)", 10, (this.getHeight()/3)+100, p);
+        c.drawText("No More Moves", 10, this.getHeight()/3, p);
 
 
 //        int starsY = 675;
@@ -231,13 +235,7 @@ public class AnimatedView extends View {
         }
     }
 
-    public void setupHomescreen() {
-        Random rnd = new Random();
-        balls.clear();
-        for (int i = 0;i < 30;i++) {
-            balls.add(new Ball(this.getWidth(), this.getHeight(), level, colors[rnd.nextInt(colors.length)]));
-        }
-    }
+
 
     public float setTextSize(String text, int width, Paint p) {
 
@@ -285,7 +283,7 @@ public class AnimatedView extends View {
         float right = this.getWidth();
         float bottom = this.getHeight();
         if (this.getWidth() < 500)
-            top = 75;
+            top = 0;
 
         c.drawRect(left, top, right, bottom, paint);
     }
@@ -305,6 +303,8 @@ public class AnimatedView extends View {
         moves = 1 + level*2;
         movesAlphaVal = 50;
 
+
+
         for (int i = 0;i < 1+(level*2);i++) {
             balls.add(new Ball(this.getWidth(), this.getHeight(), level, levelColor));
         }
@@ -319,29 +319,30 @@ public class AnimatedView extends View {
 
         if (eventAction == MotionEvent.ACTION_DOWN) {
 
-            if (lvlScreen) {
-                homeTransition = true;
-
-            } else if (lvlComplete) {
+            if (lvlComplete) {
                 lvlComplete = false;
-                //lvlScreen = true;
                 level++;
                 startLvl();
             } else if (gameOver) {
                 gameOver = false;
-                lvlScreen = true;
                 newGame = true;
-                setupHomescreen();
             } else {
                 moves--;
-
                 tvMoves.setText(moves + " moves");
-
                 createLine(x, y);
+                if (moves == 2)
+                    animateScore();
             }
 
         }
         return true;
+    }
+
+    public void animateScore()
+    {
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
+        tvMoves.startAnimation(animation);
+        tvMoves.setTextColor(Color.parseColor("red"));
     }
 
     public boolean checkForWin() {
