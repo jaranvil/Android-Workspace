@@ -5,11 +5,11 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.jaredeverett.jared.breakout"
+        applicationId "com.nscc.jared.gamejam"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.5"
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         release {
