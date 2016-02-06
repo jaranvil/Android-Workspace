@@ -1,8 +1,96 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MapActivity" >
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.jared.ag_framework.MapsActivity" />
+
+<RadioGroup
+    android:id="@+id/radio_group_list_selector"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.jared.ag_framework.MapsActivity" />
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:background="#80000000"
+    android:padding="4dp" >
+
+    <RadioButton
+        android:id="@+id/radioPopular"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="All"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_weight="1"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/VerticalLine"
+        android:layout_width="1dip"
+        android:layout_height="match_parent"
+        android:background="#aaa" />
+
+    <RadioButton
+        android:id="@+id/radioAZ"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="Top"
+        android:layout_weight="1"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/VerticalLine3"
+        android:layout_width="1dip"
+        android:layout_height="match_parent"
+        android:background="#aaa" />
+
+    <RadioButton
+        android:id="@+id/radioCategory"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="New"
+        android:layout_weight="1"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+</RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radio_group_list_selector2"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="#80000000"
+        android:padding="4dp"
+        android:layout_gravity="bottom">
+
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Drop Photo"
+            android:id="@+id/button" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finding Location..."
+        android:id="@+id/tvLoading"
+        android:layout_gravity="center"
+        android:textColor="#444444"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+</FrameLayout>

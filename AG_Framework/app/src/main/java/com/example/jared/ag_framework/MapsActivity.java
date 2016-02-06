@@ -2,6 +2,10 @@ package com.example.jared.ag_framework;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -9,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -16,8 +22,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -25,6 +35,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap map;
     public LocationManager locationManager;
     public LocationUpdateListener listener;
+
+    private Marker prevUserPosition;
+    private GroundOverlay prevOverlay;
+
+    private TextView loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +49,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        loading = (TextView)findViewById(R.id.tvLoading);
+    }
+
+    public void drawCircleAroundUser(Location location)
+    {
+        int radius = 100;
+        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+
+        int d = 500;
+        Bitmap bm = Bitmap.createBitmap(d, d, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bm);
+        Paint p = new Paint();
+        p.setColor(Color.parseColor("#800000"));
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(10);
+        c.drawCircle(d / 2, d / 2, d / 2, p);
+
+        BitmapDescriptor bmD = BitmapDescriptorFactory.fromBitmap(bm);
+
+        if (prevOverlay != null)
+            prevOverlay.remove();
+
+        GroundOverlayOptions drawOptions = new GroundOverlayOptions().
+                        image(bmD).
+                        position(position, radius * 2, radius * 2).
+                        transparency(0.4f);
+
+        prevOverlay = map.addGroundOverlay(drawOptions);
+
 
     }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (map == null) {
-            map = ((SupportMapFragment) getSupportFragmentManager().
-                    findFragmentById(R.id.map)).getMap();
-            // Check if we were successful in obtaining the map.
-            if (map != null) {
-                // The Map is verified. It is now safe to manipulate the map.
-            }
-        }
-    }
 
     /**
      * Manipulates the map once available.
@@ -90,7 +123,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onLocationChanged(Location location) {
             // TODO Auto-generated method stub
 
+            loading.setVisibility(View.GONE);
 
+            if (prevUserPosition != null)
+                prevUserPosition.remove();
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -99,8 +135,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here");
             userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
-            map.addMarker(userMarker);
+            prevUserPosition = map.addMarker(userMarker);
 
+            drawCircleAroundUser(location);
         }
 
         @Override
