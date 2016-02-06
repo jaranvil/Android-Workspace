@@ -1,0 +1,134 @@
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_box="all"
+        android:background="#659b5e">
+
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:background="#659b5e"
+            android:gravity="center_horizontal">
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Level"
+                        android:id="@+id/tvLevelTitle"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="16dp"
+                        android:textColor="#abc8c0"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp" />
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/btnLevelUp"
+                        android:background="@drawable/up" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:id="@+id/tvLevel"
+                        android:textSize="34dp"
+                        android:textColor="#daf7dc"
+                        android:gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/btnLevelDown"
+                        android:background="@drawable/down" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:id="@+id/tvTotal"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="40dp"
+                    android:textColor="#abc8c0"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gear"
+                        android:id="@+id/tvGearTitle"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="16dp"
+                        android:textColor="#abc8c0"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp" />
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/btnGearUp"
+                        android:background="@drawable/up"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:id="@+id/tvGear"
+                        android:textSize="34dp"
+                        android:textColor="#abc8c0"
+                        android:gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/btnGearDown"
+                        android:background="@drawable/down"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+</android.support.wearable.view.BoxInsetLayout>

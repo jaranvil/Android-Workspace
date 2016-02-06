@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    //private GoogleApiClient client;
 
     private DBAdapter db;
     protected ArrayList<Video> videos = new ArrayList<>();
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         btnRestore = (Button) findViewById(R.id.btnRestore);
 
@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 // Contact
                 db.open();
                 long id = db.insertVideo("Contact (1997)","Dr. Ellie Arroway, after years of searching, finds conclusive radio proof of intelligent aliens, who send plans for a mysterious machine.", "contact", "contact");
-
                 id = db.insertVideo("The Martian","During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.", "martian", "martian");
-
                 id = db.insertVideo("Star Trek: First Contact","Captain Jean-Luc Picard (Patrick Stewart) and the crew of the newly commissioned Enterprise-E battle the insidious Borg to restore the rightful future of Earth.", "contact2", "contact2");
+                id = db.insertVideo("Interstellar","In Earth's future, a global crop blight and second Dust Bowl are slowly rendering the planet uninhabitable. Professor Brand (Michael Caine), a brilliant NASA physicist, is working on plans to save mankind by transporting Earth's population to a new home", "interstellar", "interstellar");
+
                 db.close();
 
                 loadMovies();
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
     }
 
     @Override
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         setupDB();
         loadMovies();
         setupVideoList();
-
     }
 
     private void showFileChooser() {
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setupDB()
     {
-
         try {
             String destPath = "/data/data/" + getPackageName() + "/database/MyDB";
             //Alternate way to do destPath:
@@ -150,11 +147,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         db = new DBAdapter(this);
-
-
-
-
-
     }
 
     public void CopyDB(InputStream inputStream,OutputStream outputStream)
@@ -170,44 +162,44 @@ public class MainActivity extends AppCompatActivity {
         outputStream.close();
 
     }//end method CopyDB
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.jared.movietrailers/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.jared.movietrailers/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client.connect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Main Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.example.jared.movietrailers/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Main Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.example.jared.movietrailers/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
+//    }
 }

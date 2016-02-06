@@ -66,10 +66,7 @@ public class VideoActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "rating " + rating, Toast.LENGTH_SHORT).show();
                 // UPDATE
                 db.open();
-                if (db.updateVideo(id, rating))
-                    Toast.makeText(getApplicationContext(), "Update successful", Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(), "Update failed", Toast.LENGTH_LONG).show();
+                db.updateVideo(id, rating);
                 db.close();
 
             }
@@ -140,15 +137,6 @@ public class VideoActivity extends AppCompatActivity {
         }
 
         db = new DBAdapter(this);
-
-
-        // INSERT
-//        db.open();
-//        long id = db.insertVideo("The Martian","A cool movie about Mars", "martian", "martian");
-//        db.close();
-
-
-
     }
 
     public void CopyDB(InputStream inputStream,OutputStream outputStream)
