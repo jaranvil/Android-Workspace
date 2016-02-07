@@ -60,9 +60,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Widgets
     private TextView loading;
     private Button btnDrop;
-    private ImageView ivTest;
+    private Button btnRefresh;
 
-    WebService remote = new WebService();
+    WebService remote;
+
+    public MapsActivity() {
+        remote = new WebService();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // XML widgets
         loading = (TextView)findViewById(R.id.tvLoading);
         btnDrop = (Button) findViewById(R.id.btnDrop);
-        ivTest = (ImageView) findViewById(R.id.ivTest);
+        btnRefresh = (Button) findViewById(R.id.btnRefresh);
 
         // listener for drop button
         btnDrop.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +96,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
 
+            }
+        });
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                remote.loadMarkers();
             }
         });
     }
@@ -206,8 +216,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 @Override
                 public boolean onMarkerClick(Marker arg0) {
-
-                        Toast.makeText(MapsActivity.this, arg0.getSnippet(), Toast.LENGTH_SHORT).show();// display toast
+                    Intent i = new Intent("PhotoActivity");//create intent object
+                    Bundle extras = new Bundle();//create bundle object
+                    extras.putString("filename", arg0.getSnippet());
+                    i.putExtras(extras);
+                    startActivity(i);
                     return true;
                 }
 

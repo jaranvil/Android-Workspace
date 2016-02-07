@@ -45,6 +45,10 @@
         <activity
             android:name=".PhotoActivity"
             android:label="@string/title_activity_photo" >
+            <intent-filter>
+                <action android:name="PhotoActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 

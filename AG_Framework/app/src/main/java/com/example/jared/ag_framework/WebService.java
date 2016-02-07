@@ -53,6 +53,7 @@ public class WebService {
     // parse result from http response in 'task'
     public void parseJSON(String json)
     {
+        allMarkers.clear();
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);
