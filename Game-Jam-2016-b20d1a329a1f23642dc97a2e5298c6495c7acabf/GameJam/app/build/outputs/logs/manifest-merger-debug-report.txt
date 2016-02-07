@@ -1,0 +1,71 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:2:1-29:12
+	package
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:3:5-37
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+application
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:5:5-27:19
+MERGED from [com.android.support:appcompat-v7:23.0.1] C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.1] C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\AndroidManifest.xml:22:5-20
+	android:screenOrientation
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:9:9-52
+	android:label
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:8:9-41
+	android:allowBackup
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:6:9-35
+	android:icon
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:7:9-43
+	android:theme
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:10:9-67
+activity#com.nscc.jared.gamejam.MainActivity
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:11:9-18:20
+	android:label
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:13:13-45
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:12:13-41
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:14:13-17:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:15:17-69
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:15:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:16:17-77
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:16:27-74
+activity#com.nscc.jared.gamejam.GameActivity
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:19:9-26:20
+	android:label
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:21:13-56
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:20:13-41
+intent-filter#GameActivity+android.intent.category.DEFAULT
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:22:13-25:29
+action#GameActivity
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:23:17-55
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:23:25-52
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:24:17-76
+	android:name
+		ADDED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml:24:27-73
+uses-sdk
+INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:appcompat-v7:23.0.1] C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.1] C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\AndroidManifest.xml:20:5-43
+	android:targetSdkVersion
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Jared\Documents\Android-Workspace\Game-Jam-2016-b20d1a329a1f23642dc97a2e5298c6495c7acabf\GameJam\app\src\main\AndroidManifest.xml

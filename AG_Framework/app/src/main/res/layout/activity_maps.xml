@@ -81,7 +81,7 @@ tools:context=".MapActivity" >
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="Drop Photo"
-            android:id="@+id/button" />
+            android:id="@+id/btnDrop" />
     </RadioGroup>
 
     <TextView
@@ -93,4 +93,10 @@ tools:context=".MapActivity" >
         android:textColor="#444444"
         android:textSize="24dp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivTest"
+        android:layout_gravity="left|top" />
 </FrameLayout>

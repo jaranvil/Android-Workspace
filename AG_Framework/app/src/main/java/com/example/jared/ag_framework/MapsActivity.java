@@ -1,6 +1,8 @@
 package com.example.jared.ag_framework;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,11 +11,17 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.provider.SyncStateContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,26 +38,78 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.File;
+import java.util.ArrayList;
 
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
+    // camera constant
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // map stuff
     private GoogleMap map;
     public LocationManager locationManager;
     public LocationUpdateListener listener;
+    public Location userLocation;
 
-    private Marker prevUserPosition;
+    // for drawing a canvas over the map
     private GroundOverlay prevOverlay;
 
+    // Widgets
     private TextView loading;
+    private Button btnDrop;
+    private ImageView ivTest;
+
+    WebService remote = new WebService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        // Setup Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // XML widgets
         loading = (TextView)findViewById(R.id.tvLoading);
+        btnDrop = (Button) findViewById(R.id.btnDrop);
+        ivTest = (ImageView) findViewById(R.id.ivTest);
+
+        // listener for drop button
+        btnDrop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // open camera and take picture
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+//                File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+
+            }
+        });
+    }
+
+    // When the camera activity finished it encodes the image as a bitmap in the result data
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap photo = (Bitmap) extras.get("data");
+            //ivTest.setImageBitmap(imageBitmap);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+            remote.saveThumbnail(encodedImage, userLocation.getLatitude(), userLocation.getLongitude());
+            remote.loadMarkers();
+        }
     }
 
     public void drawCircleAroundUser(Location location)
@@ -77,67 +137,81 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         transparency(0.4f);
 
         prevOverlay = map.addGroundOverlay(drawOptions);
-
-
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        // disable control gentures to lock the map in place
         map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
-
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-
-//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-//                    LocationService.MY_PERMISSION_ACCESS_COURSE_LOCATION);
-
+            // TODO - request permissions
         }
 
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
-
+        // TODO - Set query position and query again after the user has moved a good distance
+        remote.loadMarkers();
     }
 
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
 
+//        if (marker.equals(pictureMarker))
+//        {
+//            Toast.makeText(getApplicationContext(), "msg msg", Toast.LENGTH_SHORT).show();
+//        }
+        return false;
+    }
 
-    class LocationUpdateListener implements LocationListener {
-
+    class LocationUpdateListener implements LocationListener
+    {
         @Override
         public void onLocationChanged(Location location) {
             // TODO Auto-generated method stub
 
             loading.setVisibility(View.GONE);
+            userLocation = location;
 
-            if (prevUserPosition != null)
-                prevUserPosition.remove();
+//            if (prevUserPosition != null)
+//                prevUserPosition.remove();
+            map.clear();
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
-            map.animateCamera(yourLocation);
+            map.moveCamera(yourLocation);
+
+            //drawCircleAroundUser(location);
+
+            for (int i = 0;i<remote.allMarkers.size();i++)
+            {
+                map.addMarker(remote.allMarkers.get(i).marker);
+
+            }
 
             MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here");
             userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
-            prevUserPosition = map.addMarker(userMarker);
+            map.addMarker(userMarker);
 
-            drawCircleAroundUser(location);
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+            {
+
+                @Override
+                public boolean onMarkerClick(Marker arg0) {
+
+                        Toast.makeText(MapsActivity.this, arg0.getSnippet(), Toast.LENGTH_SHORT).show();// display toast
+                    return true;
+                }
+
+            });
         }
 
         @Override
