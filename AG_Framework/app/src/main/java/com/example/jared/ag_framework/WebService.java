@@ -36,10 +36,11 @@ public class WebService {
     static InputStream is = null;
     static JSONObject jObj = null;
 
-    public void loadMarkers()
+    public void loadMarkers(double lat, double lng)
     {
         FetchAllMarkers taskFetchAll = new FetchAllMarkers();
-        taskFetchAll.execute();
+        String[] params = {Double.toString(lat), Double.toString(lng)};
+        taskFetchAll.execute(params);
     }
 
     public void saveThumbnail(String encodedString, double lat, double lng)
@@ -66,32 +67,45 @@ public class WebService {
             //Get the instance of JSONArray that contains JSONObjects
             JSONArray jsonArray = jObj.optJSONArray("photo");
 
-            //Iterate the jsonArray and print the info of JSONObjects
-            for(int i=0; i < jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if (jsonArray != null)
+            {
+                //Iterate the jsonArray and print the info of JSONObjects
+                for(int i=0; i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                int id = Integer.parseInt(jsonObject.optString("id"));
-                double lat = Double.parseDouble(jsonObject.optString("lat"));
-                double lng = Double.parseDouble(jsonObject.optString("lng"));
-                String url = jsonObject.optString("url");
+                    int id = Integer.parseInt(jsonObject.optString("id"));
+                    double lat = Double.parseDouble(jsonObject.optString("lat"));
+                    double lng = Double.parseDouble(jsonObject.optString("lng"));
+                    String url = jsonObject.optString("url");
 
-                allMarkers.add(new PhotoMarker(id, lat, lng, url));
+                    allMarkers.add(new PhotoMarker(id, lat, lng, url));
+                }
             }
-
         } catch (JSONException e) {e.printStackTrace();}
     }
 
     //                                           Param, Progress, Return
-    private class FetchAllMarkers extends AsyncTask<Void, Void, String>
+    private class FetchAllMarkers extends AsyncTask<String, Void, String>
     {
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
             String json = "";
             // Making HTTP request
             try {
                 // defaultHttpClient
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost("http://www.jaredeverett.ca/android/all_photo_markers.php");
+
+                List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+                nameValuePair.add(new BasicNameValuePair("lat", params[0]));
+                nameValuePair.add(new BasicNameValuePair("lng", params[1]));
+
+                try {
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+                } catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();

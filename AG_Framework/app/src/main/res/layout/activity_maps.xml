@@ -1,10 +1,9 @@
-
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".MapActivity" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MapActivity">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -15,98 +14,33 @@ tools:context=".MapActivity" >
         android:layout_height="match_parent"
         tools:context="com.example.jared.ag_framework.MapsActivity" />
 
-<RadioGroup
-    android:id="@+id/radio_group_list_selector"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:orientation="horizontal"
-    android:background="#80000000"
-    android:padding="4dp" >
 
-    <RadioButton
-        android:id="@+id/radioPopular"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:text="All"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_weight="1"
-        android:textColor="#ffffff"
-        android:textStyle="bold" />
-
-    <View
-        android:id="@+id/VerticalLine"
-        android:layout_width="1dip"
-        android:layout_height="match_parent"
-        android:background="#aaa" />
-
-    <RadioButton
-        android:id="@+id/radioAZ"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="Top"
-        android:layout_weight="1"
-        android:textColor="#ffffff"
-        android:textStyle="bold" />
-
-    <View
-        android:id="@+id/VerticalLine3"
-        android:layout_width="1dip"
-        android:layout_height="match_parent"
-        android:background="#aaa" />
-
-    <RadioButton
-        android:id="@+id/radioCategory"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="New"
-        android:layout_weight="1"
-        android:textColor="#ffffff"
-        android:textStyle="bold" />
-
-</RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/radio_group_list_selector2"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:orientation="horizontal"
         android:background="#80000000"
-        android:padding="4dp"
-        android:layout_gravity="bottom">
+        android:padding="4dp" >
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/btnSettings"
+            android:background="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+            android:layout_gravity="center_vertical" />
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="Drop Photo"
-                android:id="@+id/btnDrop"
-                android:layout_weight="0.7" />
-
-            <View
-                android:id="@+id/VerticalLine4"
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="#aaa" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:text="Refresh"
-                android:id="@+id/btnRefresh"
-                android:layout_weight="0.3" />
-
-        </LinearLayout>
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/btnRefresh"
+            android:background="@drawable/abc_ic_menu_copy_mtrl_am_alpha"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
 
 
 
-    </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
@@ -117,6 +51,19 @@ tools:context=".MapActivity" >
         android:textColor="#444444"
         android:textSize="24dp"
         android:textStyle="bold" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDrop"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:background="@drawable/add_button" />
+
+
+
+
 
 
 </FrameLayout>

@@ -58,14 +58,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GroundOverlay prevOverlay;
 
     // Widgets
-    private TextView loading;
+    private TextView tvloading;
     private Button btnDrop;
     private Button btnRefresh;
 
     WebService remote;
+    private boolean loading = true;
+
+    // Stores the thumbnail captured by the user
+    // holding onto it while waiting for confirmation actvivity
+    private Bitmap photo;
 
     public MapsActivity() {
         remote = new WebService();
+    }
+
+    @Override
+    public void onPause()
+    {
+        if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            // TODO - request permissions
+        }
+        if (locationManager != null)
+            locationManager.removeUpdates(listener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            // TODO - request permissions
+        }
+        if (locationManager != null)
+        {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        }
     }
 
     @Override
@@ -78,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // XML widgets
-        loading = (TextView)findViewById(R.id.tvLoading);
+        tvloading = (TextView)findViewById(R.id.tvLoading);
         btnDrop = (Button) findViewById(R.id.btnDrop);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
 
@@ -101,7 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                remote.loadMarkers();
+                Toast.makeText(getApplicationContext(), "Refreshing map...", Toast.LENGTH_SHORT).show();
+                if (userLocation != null)
+                    remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
             }
         });
     }
@@ -109,16 +140,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // When the camera activity finished it encodes the image as a bitmap in the result data
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
+            // Get image from intent data
             Bundle extras = data.getExtras();
-            Bitmap photo = (Bitmap) extras.get("data");
-            //ivTest.setImageBitmap(imageBitmap);
+            photo = (Bitmap) extras.get("data");
+
+
+            // open confirmation activity
+            Intent i = new Intent("CreateActivity");//create intent object
+            i.putExtra("image", photo); // TODO - save image as a local file and pass its URL to the activity.
+            startActivityForResult(i, 3);
+        }
+        else if (requestCode == 3 && resultCode == RESULT_OK)
+        {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] imageBytes = baos.toByteArray();
             String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-            remote.saveThumbnail(encodedImage, userLocation.getLatitude(), userLocation.getLongitude());
-            remote.loadMarkers();
+
+            if (userLocation != null)
+            {
+                remote.saveThumbnail(encodedImage, userLocation.getLatitude(), userLocation.getLongitude());
+                Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(getApplicationContext(), "Could not get location.", Toast.LENGTH_SHORT).show();
+
+            if (userLocation != null)
+                remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
         }
     }
 
@@ -131,8 +181,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap bm = Bitmap.createBitmap(d, d, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);
         Paint p = new Paint();
-        p.setColor(Color.parseColor("#800000"));
-        p.setStyle(Paint.Style.STROKE);
+        p.setColor(Color.parseColor("#0000ff"));
+        p.setAlpha(30);
         p.setStrokeWidth(10);
         c.drawCircle(d / 2, d / 2, d / 2, p);
 
@@ -167,8 +217,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
-        // TODO - Set query position and query again after the user has moved a good distance
-        remote.loadMarkers();
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker arg0) {
+                if (!arg0.getSnippet().equals("user")) {
+                    Intent i = new Intent("PhotoActivity");//create intent object
+                    Bundle extras = new Bundle();//create bundle object
+                    extras.putString("filename", arg0.getSnippet());
+                    i.putExtras(extras);
+                    startActivity(i);
+                }
+
+                return true;
+            }
+
+        });
+    }
+
+    public void drawMarkers()
+    {
+        map.clear();
+        for (int i = 0;i<remote.allMarkers.size();i++)
+        {
+            map.addMarker(remote.allMarkers.get(i).marker);
+
+        }
     }
 
     @Override
@@ -185,13 +259,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         @Override
         public void onLocationChanged(Location location) {
-            // TODO Auto-generated method stub
 
-            loading.setVisibility(View.GONE);
             userLocation = location;
 
-//            if (prevUserPosition != null)
-//                prevUserPosition.remove();
+            if (loading)
+            {
+                loading = false;
+                remote.loadMarkers(location.getLatitude(), location.getLongitude());
+                tvloading.setVisibility(View.GONE);
+            }
+
             map.clear();
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -199,32 +276,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
             map.moveCamera(yourLocation);
 
+            drawMarkers();
+
+            MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");
+            userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
+            //map.addMarker(userMarker);
             //drawCircleAroundUser(location);
 
-            for (int i = 0;i<remote.allMarkers.size();i++)
-            {
-                map.addMarker(remote.allMarkers.get(i).marker);
 
-            }
-
-            MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here");
-            userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
-            map.addMarker(userMarker);
-
-            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-            {
-
-                @Override
-                public boolean onMarkerClick(Marker arg0) {
-                    Intent i = new Intent("PhotoActivity");//create intent object
-                    Bundle extras = new Bundle();//create bundle object
-                    extras.putString("filename", arg0.getSnippet());
-                    i.putExtras(extras);
-                    startActivity(i);
-                    return true;
-                }
-
-            });
         }
 
         @Override

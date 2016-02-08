@@ -1,5 +1,6 @@
 package com.example.jared.ag_framework;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -13,7 +14,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class PhotoActivity extends AppCompatActivity {
+public class PhotoActivity extends Activity {
 
     private ImageView ivPhoto;
 

@@ -21,7 +21,7 @@ public class PhotoMarker {
                         .position(temp)
                         .title("test")
                         .snippet(url);
-        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.picture_icon));
+        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
 
     }
 
