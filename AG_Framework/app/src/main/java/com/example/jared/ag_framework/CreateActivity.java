@@ -3,19 +3,29 @@ package com.example.jared.ag_framework;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class CreateActivity extends Activity {
 
     private ImageView ivImage;
     private Button btnConfirm;
+    private EditText etTitle;
+    private EditText etDescription;
+
+    private LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +34,21 @@ public class CreateActivity extends Activity {
 
         ivImage = (ImageView) findViewById(R.id.ivImage);
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
+        layout = (LinearLayout) findViewById(R.id.mainLayout);
+        etTitle = (EditText) findViewById(R.id.etTitle);
+        etDescription = (EditText) findViewById(R.id.etDescription);
 
-        Bitmap image = getIntent().getParcelableExtra("image");
+        // Display full image
+        String filePath = "";
+        Bundle extras=getIntent().getExtras();
+        if(extras != null)//if bundle has content
+        {
+            filePath = extras.getString("filePath");
+        }
+        Bitmap bmp = BitmapFactory.decodeFile(filePath);
 
-        ivImage.setImageBitmap(image);
+        ivImage.setImageBitmap(bmp);
+
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -40,6 +61,8 @@ public class CreateActivity extends Activity {
     {
         Bundle conData = new Bundle();
         conData.putBoolean("confirm", confirm);
+        conData.putString("title", etTitle.getText().toString());
+        conData.putString("description", etDescription.getText().toString());
         Intent intent = new Intent();
         intent.putExtras(conData);
         setResult(RESULT_OK, intent);

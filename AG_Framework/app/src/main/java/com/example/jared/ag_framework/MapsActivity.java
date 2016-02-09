@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.SyncStateContract;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,37 +44,43 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    // TODO - Do some bloody refactoring
+
     // camera constant
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    // Where the last photo taken is
+    private String mCurrentPhotoPath;
 
     // map stuff
     private GoogleMap map;
     public LocationManager locationManager;
     public LocationUpdateListener listener;
     public Location userLocation;
-
-    // for drawing a canvas over the map
-    private GroundOverlay prevOverlay;
+    private MapAnimation mapAnimation;
 
     // Widgets
     private TextView tvloading;
     private Button btnDrop;
     private Button btnRefresh;
 
-    WebService remote;
+    private WebService remote = new WebService();
+    private PhotoUtil photoUtil = new PhotoUtil();
     private boolean loading = true;
 
     // Stores the thumbnail captured by the user
     // holding onto it while waiting for confirmation actvivity
     private Bitmap photo;
-
-    public MapsActivity() {
-        remote = new WebService();
-    }
 
     @Override
     public void onPause()
@@ -81,12 +90,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         if (locationManager != null)
             locationManager.removeUpdates(listener);
+        if (mapAnimation != null)
+            mapAnimation.stop();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (mapAnimation != null)
+            mapAnimation.start();
+
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // TODO - request permissions
         }
@@ -114,17 +129,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // listener for drop button
         btnDrop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // open camera and take picture
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//                File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
+                // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
 
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photoFile));
+                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    }
+                }
             }
         });
 
@@ -140,28 +160,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // When the camera activity finished it encodes the image as a bitmap in the result data
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Return from camera actvity
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
         {
-            // Get image from intent data
-            Bundle extras = data.getExtras();
-            photo = (Bitmap) extras.get("data");
+
+            //Bitmap photo = photoUtil.getScaledBitmap(mCurrentPhotoPath, 500, 800); // TODO - get view demensions
+
+            // Get Thumbnail
+//            Bundle extras = data.getExtras();
+//            photo = (Bitmap) extras.get("data");
 
 
             // open confirmation activity
             Intent i = new Intent("CreateActivity");//create intent object
             i.putExtra("image", photo); // TODO - save image as a local file and pass its URL to the activity.
+            Bundle extras = new Bundle();
+            extras.putString("filePath", mCurrentPhotoPath);
+            i.putExtras(extras);
             startActivityForResult(i, 3);
         }
+        // return from Confirmation activity
         else if (requestCode == 3 && resultCode == RESULT_OK)
         {
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
+//            bmp.compress(Bitmap.CompressFormat.PNG,25, baos);
+//            byte[] imageBytes = baos.toByteArray();
+         //   String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+
+            File file = new File(mCurrentPhotoPath);
+
+            Bitmap temp = decodeFile(file);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            temp.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] imageBytes = baos.toByteArray();
             String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
 
+            //TODO - delete photo if confirmation activity is canceled or finishs via back button
+            file.delete();
+
+            Bundle res = data.getExtras();
+            String title = res.getString("title");
+            String description = res.getString("description");
+
             if (userLocation != null)
             {
-                remote.saveThumbnail(encodedImage, userLocation.getLatitude(), userLocation.getLongitude());
+                remote.saveImage(encodedImage, userLocation.getLatitude(), userLocation.getLongitude(), title, description);
                 Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
             }
             else
@@ -172,31 +216,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void drawCircleAroundUser(Location location)
-    {
-        int radius = 100;
-        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+    // Decodes image and scales it to reduce memory consumption
+    private Bitmap decodeFile(File f) {
+        try {
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
-        int d = 500;
-        Bitmap bm = Bitmap.createBitmap(d, d, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bm);
-        Paint p = new Paint();
-        p.setColor(Color.parseColor("#0000ff"));
-        p.setAlpha(30);
-        p.setStrokeWidth(10);
-        c.drawCircle(d / 2, d / 2, d / 2, p);
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=400;
 
-        BitmapDescriptor bmD = BitmapDescriptorFactory.fromBitmap(bm);
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
 
-        if (prevOverlay != null)
-            prevOverlay.remove();
-
-        GroundOverlayOptions drawOptions = new GroundOverlayOptions().
-                        image(bmD).
-                        position(position, radius * 2, radius * 2).
-                        transparency(0.4f);
-
-        prevOverlay = map.addGroundOverlay(drawOptions);
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+        } catch (FileNotFoundException e) {}
+        return null;
     }
 
     @Override
@@ -210,10 +253,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
 
+        mapAnimation = new MapAnimation(map);
+        mapAnimation.start();
+
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // TODO - request permissions
         }
-
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
@@ -255,12 +300,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
+    // create file to write new image to
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        // public gallery folder
+        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+        // private to the app storage
+        File storageDir = getExternalFilesDir(null);
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     class LocationUpdateListener implements LocationListener
     {
         @Override
         public void onLocationChanged(Location location) {
 
             userLocation = location;
+            mapAnimation.updateLocation(location);
+
+            if (remote.markersChanged)
+            {
+                remote.markersChanged = false;
+                drawMarkers();
+            }
 
             if (loading)
             {
@@ -269,20 +344,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 tvloading.setVisibility(View.GONE);
             }
 
-            map.clear();
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
-            map.moveCamera(yourLocation);
+            map.animateCamera(yourLocation);
 
-            drawMarkers();
 
             MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");
             userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
-            //map.addMarker(userMarker);
-            //drawCircleAroundUser(location);
-
 
         }
 

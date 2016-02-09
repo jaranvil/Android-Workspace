@@ -3,6 +3,7 @@ package com.example.jared.ag_framework;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 
 import org.apache.http.HttpEntity;
@@ -32,6 +33,7 @@ public class WebService {
 
     // Main list of map markers
     protected ArrayList<PhotoMarker> allMarkers = new ArrayList<>();
+    protected boolean markersChanged = true;
 
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -43,13 +45,17 @@ public class WebService {
         taskFetchAll.execute(params);
     }
 
-    public void saveThumbnail(String encodedString, double lat, double lng)
+    public void saveImage(String encodedString, double lat, double lng, String title, String description)
     {
         SaveImage taskSave = new SaveImage();
-        String[] params = {encodedString, Double.toString(lat), Double.toString(lng)};
+        String[] params = {encodedString, Double.toString(lat), Double.toString(lng), title, description};
         taskSave.execute(params);
     }
 
+    public void uploadProgressMade()
+    {
+        System.out.println("test");
+    }
 
     // parse result from http response in 'task'
     public void parseJSON(String json)
@@ -80,6 +86,7 @@ public class WebService {
 
                     allMarkers.add(new PhotoMarker(id, lat, lng, url));
                 }
+                markersChanged = true;
             }
         } catch (JSONException e) {e.printStackTrace();}
     }
@@ -99,6 +106,8 @@ public class WebService {
                 List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
                 nameValuePair.add(new BasicNameValuePair("lat", params[0]));
                 nameValuePair.add(new BasicNameValuePair("lng", params[1]));
+                nameValuePair.add(new BasicNameValuePair("title", params[2]));
+                nameValuePair.add(new BasicNameValuePair("description", params[3]));
 
                 try {
                     httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -145,6 +154,13 @@ public class WebService {
 
     private class SaveImage extends AsyncTask<String, Void, Void>
     {
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            uploadProgressMade();
+        }
+
         @Override
         protected Void doInBackground(String... params)
         {
