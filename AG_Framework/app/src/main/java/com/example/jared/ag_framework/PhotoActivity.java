@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -17,6 +18,7 @@ import java.net.URL;
 public class PhotoActivity extends Activity {
 
     private ImageView ivPhoto;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +26,23 @@ public class PhotoActivity extends Activity {
         setContentView(R.layout.activity_photo);
 
         ivPhoto = (ImageView) findViewById(R.id.ivPhoto);
-        String photoFilename = "";
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
 
+        String photoFilename = "";
+        String title = "";
+        String description = "";
         Bundle extras=getIntent().getExtras();
         if(extras != null)//if bundle has content
         {
-            photoFilename = extras.getString("filename");
+            String[] data = extras.getString("snippetString").split(":");
+            photoFilename = data[0];
+            if (data[1]!=null)
+                title = data[1];
+            if (data[2]!=null)
+                description = data[2];
         }
+
+        tvTitle.setText(title);
 
         String url = "http://jaredeverett.ca/android/images/"+photoFilename+".PNG";
         ImageLoadTask loadTask = new ImageLoadTask(url, ivPhoto);

@@ -59,10 +59,17 @@ public class CreateActivity extends Activity {
 
     private void finishWithResult(boolean confirm)
     {
+        String title = "";
+        if (etTitle.getText() != null)
+            title = etTitle.getText().toString();
+        String description = "";
+        if (etDescription.getText() != null)
+            description = etDescription.getText().toString();
+
         Bundle conData = new Bundle();
         conData.putBoolean("confirm", confirm);
-        conData.putString("title", etTitle.getText().toString());
-        conData.putString("description", etDescription.getText().toString());
+        conData.putString("title", title);
+        conData.putString("description", description);
         Intent intent = new Intent();
         intent.putExtras(conData);
         setResult(RESULT_OK, intent);

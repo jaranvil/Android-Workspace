@@ -90,8 +90,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         if (locationManager != null)
             locationManager.removeUpdates(listener);
-        if (mapAnimation != null)
-            mapAnimation.stop();
+        //if (mapAnimation != null)
+            //mapAnimation.stop();
         super.onPause();
     }
 
@@ -99,8 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
 
-        if (mapAnimation != null)
-            mapAnimation.start();
+        //if (mapAnimation != null)
+            //mapAnimation.start();
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // TODO - request permissions
@@ -253,8 +253,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
 
-        mapAnimation = new MapAnimation(map);
-        mapAnimation.start();
+        //mapAnimation = new MapAnimation(map);
+        //mapAnimation.start();
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // TODO - request permissions
@@ -269,7 +269,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!arg0.getSnippet().equals("user")) {
                     Intent i = new Intent("PhotoActivity");//create intent object
                     Bundle extras = new Bundle();//create bundle object
-                    extras.putString("filename", arg0.getSnippet());
+                    extras.putString("snippetString", arg0.getSnippet());
                     i.putExtras(extras);
                     startActivity(i);
                 }
@@ -329,7 +329,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onLocationChanged(Location location) {
 
             userLocation = location;
-            mapAnimation.updateLocation(location);
+            //mapAnimation.updateLocation(location);
 
             if (remote.markersChanged)
             {
@@ -337,8 +337,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 drawMarkers();
             }
 
+            boolean animate = true;
             if (loading)
             {
+                animate = false;
                 loading = false;
                 remote.loadMarkers(location.getLatitude(), location.getLongitude());
                 tvloading.setVisibility(View.GONE);
@@ -347,7 +349,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
-            map.animateCamera(yourLocation);
+            if (animate)
+                map.animateCamera(yourLocation);
+            else
+                map.moveCamera(yourLocation);
 
 
             MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");

@@ -14,6 +14,8 @@ error_reporting(E_ALL);
 $data = isset($_POST['string']) ? mysql_real_escape_string($_POST['string']) : "";
 $lat = isset($_POST['lat']) ? mysql_real_escape_string($_POST['lat']) : "";
 $lng = isset($_POST['lng']) ? mysql_real_escape_string($_POST['lng']) : "";
+$title = isset($_POST['title']) ? mysql_real_escape_string($_POST['title']) : "";
+$description = isset($_POST['description']) ? mysql_real_escape_string($_POST['description']) : "";
 
 $filename = rand() . rand() . rand();
 
@@ -26,7 +28,7 @@ fwrite($file, $binary);
 fclose($file);
 
 
-$query = "INSERT INTO photos (lat, lng, url) VALUES (".$lat.", ".$lng.", '".$filename."')";
+$query = "INSERT INTO photos (lat, lng, url, title, description) VALUES (".$lat.", ".$lng.", '".$filename."', '".$title."', '".$description."')";
 $result = mysql_query($query);
 
 

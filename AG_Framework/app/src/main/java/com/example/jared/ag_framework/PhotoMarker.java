@@ -9,18 +9,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class PhotoMarker {
     protected MarkerOptions marker;
-    String url;
 
-    public PhotoMarker(int id, double lat, double lng, String url)
+    public PhotoMarker(int id, double lat, double lng, String url, String title, String description)
     {
-
-        this.url = url;
+        String snippetText = url+":"+title+" :"+description+" ";
 
         LatLng temp = new LatLng(lat, lng);
         this.marker = new MarkerOptions()
                         .position(temp)
                         .title("test")
-                        .snippet(url);
+                        .snippet(snippetText);
         marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
 
     }
