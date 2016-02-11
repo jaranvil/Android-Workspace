@@ -35,12 +35,13 @@ public class WebService {
 
     // Main list of map markers
     protected ArrayList<PhotoMarker> allMarkers = new ArrayList<>();
-    protected boolean markersChanged = true;
+    protected boolean markersLoaded = false;
 
     static InputStream is = null;
     static JSONObject jObj = null;
 
     public void loadMarkers(double lat, double lng) {
+        markersLoaded = false;
         FetchAllMarkers taskFetchAll = new FetchAllMarkers();
         String[] params = {Double.toString(lat), Double.toString(lng)};
         taskFetchAll.execute(params);
@@ -87,8 +88,8 @@ public class WebService {
 
                     allMarkers.add(new PhotoMarker(id, lat, lng, url, title, description));
                 }
-                markersChanged = true;
             }
+            markersLoaded = true;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -122,7 +123,6 @@ public class WebService {
 
                     allMarkers.add(new PhotoMarker(id, lat, lng, url, title, description));
                 }
-                markersChanged = true;
             }
         } catch (JSONException e) {
             e.printStackTrace();

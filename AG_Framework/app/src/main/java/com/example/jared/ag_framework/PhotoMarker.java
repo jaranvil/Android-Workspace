@@ -2,6 +2,7 @@ package com.example.jared.ag_framework;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -39,7 +40,18 @@ public class PhotoMarker {
 
     public void createMarker(Bitmap thumbnail)
     {
-        marker.icon(BitmapDescriptorFactory.fromBitmap(thumbnail));
+        marker.icon(BitmapDescriptorFactory.fromBitmap(rotateImage(thumbnail, 90)));
+    }
+
+    // TODO -- move this method to photoUtil
+    public Bitmap rotateImage(Bitmap source, float angle) {
+        Bitmap retVal;
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+        return retVal;
     }
 
     public class ThumbnailLoadTask extends AsyncTask<Void, Void, Bitmap> {

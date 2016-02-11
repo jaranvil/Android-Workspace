@@ -35,8 +35,8 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="samplesample sample sample sample sample sample sample sample sample sa"
-            android:id="@+id/tvDescrition"
+            android:text=""
+            android:id="@+id/tvDescription"
             android:textSize="14dp"
             android:textColor="#ffffff"
             android:layout_below="@+id/tvTitle"
@@ -71,31 +71,20 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#80000000"
+        android:background="#800000"
         android:padding="4dp"
         android:id="@+id/temp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:alpha="0.7">
 
 
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/button"
-            android:background="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/button2"
+            android:id="@+id/btnDelete"
             android:background="@drawable/abc_ic_clear_mtrl_alpha"
-            android:layout_marginLeft="50dp" />
+            android:layout_marginLeft="10dp" />
 
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/button3"
-            android:background="@drawable/abc_ic_menu_share_mtrl_alpha"
-            android:layout_marginLeft="50dp" />
     </LinearLayout>
 
 

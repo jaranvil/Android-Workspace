@@ -14,7 +14,10 @@
         android:layout_height="match_parent"
         tools:context="com.example.jared.ag_framework.MapsActivity" />
 
-
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -26,20 +29,49 @@
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/btnSettings"
-            android:background="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
-            android:layout_gravity="center_vertical" />
+            android:id="@+id/btnRefresh"
+            android:background="@drawable/refresh"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
 
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/btnRefresh"
-            android:background="@drawable/abc_ic_menu_copy_mtrl_am_alpha"
+            android:id="@+id/btnAbout"
+            android:background="@drawable/ic_setting_light"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/tvCord"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="30dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#800000"
+        android:padding="4dp"
+        android:layout_gravity="center_horizontal|top"
+        android:alpha="0.7">
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="No user accounts yet. Any user can drop and remove photos."
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center" />
     </LinearLayout>
 
 
+    </LinearLayout>
 
 
     <TextView
@@ -61,9 +93,135 @@
         android:layout_margin="16dp"
         android:background="@drawable/add_button" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading Photos..."
+        android:id="@+id/tvLoadingPhotos"
+        android:layout_gravity="left|bottom"
+        android:textColor="#000000"
+        android:textSize="26dp"
+        android:layout_marginBottom="30dp" />
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:baselineAligned="true"
+        android:id="@+id/lyInfoView"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/icon" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Untitled App"
+                android:id="@+id/textView4"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="28dp"
+                android:gravity="right|center_horizontal"
+                android:layout_alignTop="@+id/imageView2"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:lines="2"
+                android:layout_weight="0.5"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView3"
+                android:background="@drawable/red_marker"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take and drop photos on the map. Walk to pictures to pick them up."
+                android:id="@+id/textView5"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:textColor="#000000"
+                android:layout_marginLeft="20dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView4"
+                android:background="@drawable/eye"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your photos are visible to nearby users."
+                android:id="@+id/textView6"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:textColor="#800000"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp" />
+
+
+        </LinearLayout>
 
 
 
 
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Okay"
+            android:id="@+id/btnOkay"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -3,6 +3,7 @@ package com.example.jared.ag_framework;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,10 +22,9 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -51,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     // TODO - Do some bloody refactoring
@@ -58,6 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // camera constant
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
+
+    public static final String PREFS_NAME = "AOP_PREFS";
+    SharedPreferences sharedpreferences;
 
     // Where the last photo taken is
     private String mCurrentPhotoPath;
@@ -73,6 +78,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView tvloading;
     private Button btnDrop;
     private Button btnRefresh;
+    private TextView tvLoadingPhotos;
+    private TextView tvCord;
+    private LinearLayout lyInfoView;
+    private Button btnOkay;
+    private Button btnAbout;
 
     private WebService remote = new WebService();
     private PhotoUtil photoUtil = new PhotoUtil();
@@ -121,10 +131,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+
         // XML widgets
         tvloading = (TextView)findViewById(R.id.tvLoading);
         btnDrop = (Button) findViewById(R.id.btnDrop);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
+        tvLoadingPhotos = (TextView) findViewById(R.id.tvLoadingPhotos);
+        tvCord = (TextView) findViewById(R.id.tvCord);
+        lyInfoView = (LinearLayout) findViewById(R.id.lyInfoView);
+        btnOkay = (Button) findViewById(R.id.btnOkay);
+        btnAbout = (Button) findViewById(R.id.btnAbout);
+
+        // Check if welcome screen is needed
+        sharedpreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean viewed = sharedpreferences.getBoolean("viewed", false);
+        if (!viewed)
+            lyInfoView.setVisibility(View.VISIBLE);
 
         // listener for drop button
         btnDrop.setOnClickListener(new View.OnClickListener() {
@@ -150,9 +173,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Refreshing map...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Refreshing photos...", Toast.LENGTH_SHORT).show();
                 if (userLocation != null)
                     remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
+            }
+        });
+
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean("viewed", true);
+                editor.apply();
+                lyInfoView.setVisibility(View.GONE);
+            }
+        });
+
+        btnAbout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                lyInfoView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -217,6 +255,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (userLocation != null)
                 remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
         }
+        else if (requestCode == 4 && resultCode == RESULT_OK)
+        {
+            // return from viewing a photo
+            // refresh markers in case user deleted or updated a photo
+            if (userLocation != null)
+                remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
+        }
     }
 
     // Decodes image and scales it to reduce memory consumption
@@ -254,8 +299,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         map = googleMap;
         // disable control gentures to lock the map in place
         map.getUiSettings().setScrollGesturesEnabled(false);
-        map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
+        map.getUiSettings().setZoomGesturesEnabled(false);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
@@ -278,7 +323,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Bundle extras = new Bundle();//create bundle object
                     extras.putString("snippetString", arg0.getSnippet());
                     i.putExtras(extras);
-                    startActivity(i);
+                    startActivityForResult(i, 4);
                 }
 
                 return true;
@@ -289,10 +334,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void drawMarkers()
     {
+        if (remote.markersLoaded)
+            tvLoadingPhotos.setText("");
+        else
+            tvLoadingPhotos.setText("Loading Photos...");
+
         map.clear();
         for (int i = 0;i<remote.allMarkers.size();i++)
             if (remote.allMarkers.get(i).marker != null)
                 map.addMarker(remote.allMarkers.get(i).marker);
+
+//        LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+//        MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");
+//        userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
+//        userMarker.anchor(0.5f, 0.5f);
+//        map.addMarker(userMarker);
     }
 
     @Override
@@ -334,13 +390,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onLocationChanged(Location location) {
 
             userLocation = location;
-            //mapAnimation.updateLocation(location);
-
-//            if (remote.markersChanged)
-//            {
-//                remote.markersChanged = false;
-//                drawMarkers();
-//            }
+            tvCord.setText(location.getLatitude() + ", " + location.getLongitude());
 
             drawMarkers();
 
@@ -356,16 +406,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
+            //CameraUpdate yourLocation = CameraUpdateFactory.newLatLng(currentPosition);
             if (animate)
                 map.animateCamera(yourLocation);
             else
                 map.moveCamera(yourLocation);
 
 
-            MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");
-            userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
 
         }
+
+
 
         @Override
         public void onProviderDisabled(String provider) {
