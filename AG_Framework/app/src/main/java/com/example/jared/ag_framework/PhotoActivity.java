@@ -3,12 +3,16 @@ package com.example.jared.ag_framework;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -19,6 +23,7 @@ public class PhotoActivity extends Activity {
 
     private ImageView ivPhoto;
     private TextView tvTitle;
+    private LinearLayout lyInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class PhotoActivity extends Activity {
 
         ivPhoto = (ImageView) findViewById(R.id.ivPhoto);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        lyInfo = (LinearLayout) findViewById(R.id.lyInfo);
 
         String photoFilename = "";
         String title = "";
@@ -47,6 +53,31 @@ public class PhotoActivity extends Activity {
         String url = "http://jaredeverett.ca/android/images/"+photoFilename+".PNG";
         ImageLoadTask loadTask = new ImageLoadTask(url, ivPhoto);
         loadTask.execute();
+    }
+
+    public Bitmap rotateImage(Bitmap source, float angle) {
+        Bitmap retVal;
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+        return retVal;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+
+
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_UP:
+                if (lyInfo.getVisibility() == View.GONE)
+                    lyInfo.setVisibility(View.VISIBLE);
+                else
+                    lyInfo.setVisibility(View.GONE);
+        }
+
+        return false;
     }
 
     @Override
@@ -101,7 +132,7 @@ public class PhotoActivity extends Activity {
         @Override
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
-            imageView.setImageBitmap(result);
+            imageView.setImageBitmap(rotateImage(result, 90));
         }
 
     }

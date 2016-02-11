@@ -52,9 +52,9 @@ public class WebService {
         getCivicAddress.execute(params);
     }
 
-    public void saveImage(String encodedString, double lat, double lng, String title, String description) {
+    public void saveImage(String encodedString, String encodedThumbnail, double lat, double lng, String title, String description) {
         SaveImage taskSave = new SaveImage();
-        String[] params = {encodedString, Double.toString(lat), Double.toString(lng), title, description};
+        String[] params = {encodedString, encodedThumbnail, Double.toString(lat), Double.toString(lng), title, description};
         taskSave.execute(params);
     }
 
@@ -195,11 +195,12 @@ public class WebService {
                 HttpPost httppost = new HttpPost("http://www.jaredeverett.ca/android/save_thumbnail.php");
 
                 List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-                nameValuePair.add(new BasicNameValuePair("string", params[0]));
-                nameValuePair.add(new BasicNameValuePair("lat", params[1]));
-                nameValuePair.add(new BasicNameValuePair("lng", params[2]));
-                nameValuePair.add(new BasicNameValuePair("title", params[3]));
-                nameValuePair.add(new BasicNameValuePair("description", params[4]));
+                nameValuePair.add(new BasicNameValuePair("fullImage", params[0]));
+                nameValuePair.add(new BasicNameValuePair("thumbnail", params[1]));
+                nameValuePair.add(new BasicNameValuePair("lat", params[2]));
+                nameValuePair.add(new BasicNameValuePair("lng", params[3]));
+                nameValuePair.add(new BasicNameValuePair("title", params[4]));
+                nameValuePair.add(new BasicNameValuePair("description", params[5]));
 
                 try {
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));

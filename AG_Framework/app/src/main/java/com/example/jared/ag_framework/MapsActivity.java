@@ -182,19 +182,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // return from Confirmation activity
         else if (requestCode == 3 && resultCode == RESULT_OK)
         {
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
-//            bmp.compress(Bitmap.CompressFormat.PNG,25, baos);
-//            byte[] imageBytes = baos.toByteArray();
-         //   String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-
+            // TODO - file compression and encoding into PhotoUtil class
             File file = new File(mCurrentPhotoPath);
 
-            Bitmap temp = decodeFile(file);
+            // encode full image
+            Bitmap temp = decodeFile(file, false);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             temp.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] imageBytes = baos.toByteArray();
             String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+
+            // encode tumbanil
+            Bitmap temp2 = decodeFile(file, true);
+            ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+            temp2.compress(Bitmap.CompressFormat.PNG, 100, baos2);
+            byte[] imageBytes2 = baos2.toByteArray();
+            String encodedThumbnail = Base64.encodeToString(imageBytes2, Base64.NO_WRAP);
 
             //TODO - delete photo if confirmation activity is canceled or finishs via back button
             file.delete();
@@ -205,7 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (userLocation != null)
             {
-                remote.saveImage(encodedImage, userLocation.getLatitude(), userLocation.getLongitude(), title, description);
+                remote.saveImage(encodedImage, encodedThumbnail, userLocation.getLatitude(), userLocation.getLongitude(), title, description);
                 Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
             }
             else
@@ -217,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // Decodes image and scales it to reduce memory consumption
-    private Bitmap decodeFile(File f) {
+    private Bitmap decodeFile(File f, boolean thumbnail) {
         try {
             // Decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -225,7 +228,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
             // The new size we want to scale to
-            final int REQUIRED_SIZE=400;
+            final int REQUIRED_SIZE;
+            if (thumbnail)
+                REQUIRED_SIZE=60;
+            else
+                REQUIRED_SIZE=300;
 
             // Find the correct scale value. It should be the power of 2.
             int scale = 1;
@@ -284,10 +291,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         map.clear();
         for (int i = 0;i<remote.allMarkers.size();i++)
-        {
-            map.addMarker(remote.allMarkers.get(i).marker);
-
-        }
+            if (remote.allMarkers.get(i).marker != null)
+                map.addMarker(remote.allMarkers.get(i).marker);
     }
 
     @Override
@@ -331,11 +336,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             userLocation = location;
             //mapAnimation.updateLocation(location);
 
-            if (remote.markersChanged)
-            {
-                remote.markersChanged = false;
-                drawMarkers();
-            }
+//            if (remote.markersChanged)
+//            {
+//                remote.markersChanged = false;
+//                drawMarkers();
+//            }
+
+            drawMarkers();
 
             boolean animate = true;
             if (loading)
