@@ -31,7 +31,8 @@ public class PhotoMarker {
         this.marker = new MarkerOptions()
                 .position(temp)
                 .title("test")
-                .snippet(snippetText);
+                .snippet(snippetText)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.picture_icon));
 
         String path = "http://jaredeverett.ca/android/images/"+url+"_thumbnail.PNG";
         ThumbnailLoadTask load = new ThumbnailLoadTask(path);

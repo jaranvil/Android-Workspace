@@ -32,10 +32,18 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
 
-        <!--DEBUG-->
+
+
+        <!--DEBUG ACER-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDXBzR8I8ye59uzaOesIRRSEB-ayiDFGUs" />
+            android:value="AIzaSyDXx-ElwZgTNKgnLngjw6EeiZ8rI-9rc98" />
+
+        <!--DEBUG GATEWAY-->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyDXBzR8I8ye59uzaOesIRRSEB-ayiDFGUs" />-->
+
 
         <!--RELEASE-->
         <!--<meta-data-->
