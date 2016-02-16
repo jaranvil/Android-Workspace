@@ -15,6 +15,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.provider.SyncStateContract;
 import android.support.v4.app.ActivityCompat;
@@ -61,6 +63,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
 
+    // for background thread to keep markers loaded
+    private Handler h;
+    private int FRAME_RATE = 1000;
+
+    // Shared prefs are so useful
     public static final String PREFS_NAME = "AOP_PREFS";
     SharedPreferences sharedpreferences;
 
@@ -84,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnOkay;
     private Button btnAbout;
 
+
     private WebService remote = new WebService();
     private PhotoUtil photoUtil = new PhotoUtil();
     private boolean loading = true;
@@ -102,6 +110,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             locationManager.removeUpdates(listener);
         //if (mapAnimation != null)
             //mapAnimation.stop();
+        // stop thread that keeps markers loaded
+        h.removeCallbacks(r);
         super.onPause();
     }
 
@@ -111,6 +121,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //if (mapAnimation != null)
             //mapAnimation.start();
+
+        // start thread to keep markers loaded
+        h.postAtTime(r, SystemClock.uptimeMillis() + 400);
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // TODO - request permissions
@@ -131,7 +144,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        // handler for keeping markers loaded on map
+        h = new Handler();
 
         // XML widgets
         tvloading = (TextView)findViewById(R.id.tvLoading);
@@ -171,6 +185,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        // Refresh Button
+        // grab new photo marker list from web server
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Refreshing photos...", Toast.LENGTH_SHORT).show();
@@ -194,6 +210,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+
+            if (remote.markersLoaded)
+                drawMarkers();
+
+            h.postDelayed(r, FRAME_RATE);
+        }
+    };
 
     // When the camera activity finished it encodes the image as a bitmap in the result data
     @Override
@@ -300,7 +327,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // disable control gentures to lock the map in place
         map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
-        map.getUiSettings().setZoomGesturesEnabled(false);
+        map.getUiSettings().setZoomGesturesEnabled(true);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
@@ -313,6 +340,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                float maxZoom = 17.0f;
+                if (cameraPosition.zoom < maxZoom)
+                    map.animateCamera(CameraUpdateFactory.zoomTo(maxZoom));
+                if (userLocation != null)
+                {
+                    LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLng(currentPosition);
+                    map.animateCamera(yourLocation);
+                }
+
+            }
+        });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
@@ -338,6 +381,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             tvLoadingPhotos.setText("");
         else
             tvLoadingPhotos.setText("Loading Photos...");
+
+        // reset flag to load markers
+        remote.markersLoaded = false;
 
         map.clear();
         for (int i = 0;i<remote.allMarkers.size();i++)
@@ -392,8 +438,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             userLocation = location;
             tvCord.setText(location.getLatitude() + ", " + location.getLongitude());
 
-            drawMarkers();
-
             boolean animate = true;
             if (loading)
             {
@@ -403,9 +447,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 tvloading.setVisibility(View.GONE);
             }
 
-
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
+            CameraUpdate yourLocation = CameraUpdateFactory.newLatLng(currentPosition);
             //CameraUpdate yourLocation = CameraUpdateFactory.newLatLng(currentPosition);
             if (animate)
                 map.animateCamera(yourLocation);
@@ -433,7 +476,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             // TODO Auto-generated method stub
-
+            Toast.makeText(getApplicationContext(), "onStatusChanged", Toast.LENGTH_SHORT).show();
         }
 
     }
