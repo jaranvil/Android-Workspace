@@ -33,14 +33,14 @@
         -->
 
         <!--DEBUG-->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyDXBzR8I8ye59uzaOesIRRSEB-ayiDFGUs" />-->
-
-        <!--RELEASE-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAHJBNmCGipEr1gNFIiLRX4ZHSGbMKrIvk" />
+            android:value="AIzaSyDXBzR8I8ye59uzaOesIRRSEB-ayiDFGUs" />
+
+        <!--RELEASE-->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyAHJBNmCGipEr1gNFIiLRX4ZHSGbMKrIvk" />-->
 
 
 
