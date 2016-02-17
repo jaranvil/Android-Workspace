@@ -368,10 +368,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     i.putExtras(extras);
                     startActivityForResult(i, 4);
                 }
-
                 return true;
             }
-
         });
     }
 
