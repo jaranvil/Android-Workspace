@@ -1,0 +1,117 @@
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/ivImage"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#800000ff"
+        android:padding="10dp"
+        android:id="@+id/lyInfo">
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:background="@drawable/red_marker"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Drop Image"
+                android:id="@+id/textView2"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="26dp"
+                android:layout_weight=".8"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp" />
+
+        </LinearLayout>
+
+
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etTitle"
+            android:hint="Title"
+
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/etDescription"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Description" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/btnCancel"
+                    android:layout_gravity="right"
+                    android:background="@drawable/abc_ic_clear_mtrl_alpha"
+                    android:layout_centerVertical="true" />
+
+                <Button
+                    android:id="@+id/btnConfirm"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal|right"
+
+                    android:gravity="right"
+                    android:layout_marginRight="0dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true">
+
+
+    </LinearLayout>
+</RelativeLayout>

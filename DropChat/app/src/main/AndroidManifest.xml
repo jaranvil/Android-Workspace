@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jared.ag_framework">
+    package="ca.jaredeverett.jared.dropchat">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -32,23 +32,10 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-
-
         <!-- DEBUG ACER -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDXx-ElwZgTNKgnLngjw6EeiZ8rI-9rc98" />
-
-        <!-- DEBUG GATEWAY -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="AIzaSyDXBzR8I8ye59uzaOesIRRSEB-ayiDFGUs" /> -->
-
-
-        <!-- RELEASE -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="AIzaSyAHJBNmCGipEr1gNFIiLRX4ZHSGbMKrIvk" /> -->
+            android:value="AIzaSyBWWF3rB-h_6_bc_2uApgO5-_K8pxLllQU" />
 
         <activity
             android:name=".MapsActivity"
@@ -61,28 +48,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PhotoActivity"
-            android:label="@string/title_activity_photo"
+            android:name=".CreateActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="PhotoActivity" />
-
+                <action android:name="CreateActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateActivity"
-            android:label="@string/title_activity_create">
+            android:name=".DropActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="CreateActivity" />
-
+                <action android:name="DropActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <activity android:name=".SetupActivity">
+            </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="SetupActivity" />
-
+                <action android:name="WelcomeActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

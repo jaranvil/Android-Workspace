@@ -1,4 +1,4 @@
-package com.example.jared.ag_framework;
+package ca.jaredeverett.jared.dropchat;
 
 import android.app.Activity;
 import android.content.Context;
@@ -109,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (locationManager != null)
             locationManager.removeUpdates(listener);
         //if (mapAnimation != null)
-            //mapAnimation.stop();
+        //mapAnimation.stop();
         // stop thread that keeps markers loaded
         h.removeCallbacks(r);
         super.onPause();
@@ -120,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
 
         //if (mapAnimation != null)
-            //mapAnimation.start();
+        //mapAnimation.start();
 
         // start thread to keep markers loaded
         h.postAtTime(r, SystemClock.uptimeMillis() + 400);
@@ -159,6 +159,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lyInfoView = (LinearLayout) findViewById(R.id.lyInfoView);
         btnOkay = (Button) findViewById(R.id.btnOkay);
         btnAbout = (Button) findViewById(R.id.btnAbout);
+
+        tvCord.setText(sharedpreferences.getString("username", ""));
 
         // Check if welcome screen is needed
         boolean viewed = sharedpreferences.getBoolean("viewed", false);
@@ -226,9 +228,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void loginUser()
     {
-        int userId = sharedpreferences.getInt("user_id", 0);
-        if (userId == 0)
-            startActivity(new Intent("SetupActivity"));
+        String username = sharedpreferences.getString("username", "");
+        if (username.equals(""))
+            startActivity(new Intent("WelcomeActivity"));
 
     }
 
@@ -337,7 +339,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // disable control gentures to lock the map in place
         map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
-        map.getUiSettings().setZoomGesturesEnabled(false);
         map.getUiSettings().setRotateGesturesEnabled(true);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -356,7 +357,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 //                float maxZoom = 17.0f;
-//                if (cameraPosition.zoom > maxZoom)
+//                if (cameraPosition.zoom < maxZoom)
 //                    map.animateCamera(CameraUpdateFactory.zoomTo(maxZoom));
 //                if (userLocation != null)
 //                {
@@ -379,8 +380,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     i.putExtras(extras);
                     startActivityForResult(i, 4);
                 }
+
                 return true;
             }
+
         });
     }
 
@@ -445,7 +448,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onLocationChanged(Location location) {
 
             userLocation = location;
-            tvCord.setText(location.getLatitude() + ", " + location.getLongitude());
 
             boolean animate = true;
             if (loading)

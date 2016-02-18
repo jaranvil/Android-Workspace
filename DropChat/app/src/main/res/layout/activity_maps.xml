@@ -18,57 +18,57 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#80000000"
-        android:padding="4dp" >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#80000000"
+            android:padding="4dp" >
 
 
-        <Button
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/btnRefresh"
-            android:background="@drawable/refresh"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/btnRefresh"
+                android:background="@drawable/refresh"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp" />
 
-        <Button
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/btnAbout"
-            android:background="@drawable/ic_setting_light"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical" />
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/btnAbout"
+                android:background="@drawable/ic_setting_light"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical" />
 
-        <TextView
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tvCord"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/tvCord"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#800000"
-        android:padding="4dp"
-        android:layout_gravity="center_horizontal|top"
-        android:alpha="0.7">
+            android:background="#800000"
+            android:padding="4dp"
+            android:layout_gravity="center_horizontal|top"
+            android:alpha="0.7">
 
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="No user accounts yet. Any user can drop and remove photos."
-            android:id="@+id/textView3"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="No user accounts yet. Any user can drop and remove photos."
+                android:id="@+id/textView3"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -91,7 +91,7 @@
         android:id="@+id/btnDrop"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:background="@drawable/cam_button" />
+        android:background="@drawable/add_button" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -111,14 +111,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:background="@android:drawable/dialog_holo_light_frame"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:baselineAligned="true"
         android:id="@+id/lyInfoView"
-        android:visibility="gone"
-        android:padding="20dp">
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -128,23 +127,23 @@
             android:layout_centerHorizontal="true">
 
             <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/imageView2"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/drop_marker" />
+                android:background="@drawable/icon" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="DropChat"
+                android:text="Untitled App"
                 android:id="@+id/textView4"
-                android:textColor="#4d6cfa"
+                android:textColor="#000000"
                 android:textStyle="bold"
                 android:textSize="28dp"
-                android:gravity="center_vertical|center_horizontal"
+                android:gravity="right|center_horizontal"
                 android:layout_alignTop="@+id/imageView2"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -220,9 +219,8 @@
             android:layout_height="wrap_content"
             android:text="Okay"
             android:id="@+id/btnOkay"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginTop="20dp"
-            android:background="@android:drawable/bottom_bar" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
 
