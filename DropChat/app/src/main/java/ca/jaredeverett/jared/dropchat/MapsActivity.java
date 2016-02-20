@@ -86,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnDrop;
     private Button btnRefresh;
     private TextView tvLoadingPhotos;
-    private TextView tvCord;
+    private TextView tvUsername;
     private LinearLayout lyInfoView;
     private Button btnOkay;
     private Button btnAbout;
@@ -126,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         h.postAtTime(r, SystemClock.uptimeMillis() + 400);
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            Toast.makeText(getApplicationContext(), "Tell Jared: Coarse location. On resume", Toast.LENGTH_LONG).show();
             // TODO - request permissions
         }
         if (locationManager != null)
@@ -139,6 +140,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        Toast.makeText(getApplicationContext(), "DropChat starting...", Toast.LENGTH_SHORT).show();
 
         sharedpreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         loginUser();
@@ -155,12 +158,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnDrop = (Button) findViewById(R.id.btnDrop);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
         tvLoadingPhotos = (TextView) findViewById(R.id.tvLoadingPhotos);
-        tvCord = (TextView) findViewById(R.id.tvCord);
+        tvUsername = (TextView) findViewById(R.id.tvUsername);
         lyInfoView = (LinearLayout) findViewById(R.id.lyInfoView);
         btnOkay = (Button) findViewById(R.id.btnOkay);
         btnAbout = (Button) findViewById(R.id.btnAbout);
 
-        tvCord.setText(sharedpreferences.getString("username", ""));
+        tvUsername.setText(sharedpreferences.getString("username", ""));
 
         // Check if welcome screen is needed
         boolean viewed = sharedpreferences.getBoolean("viewed", false);
@@ -348,6 +351,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mapAnimation.start();
 
         if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            Toast.makeText(getApplicationContext(), "Tell Jared: Coarse location denied. onMapReady.", Toast.LENGTH_LONG).show();
             // TODO - request permissions
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
@@ -487,7 +491,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             // TODO Auto-generated method stub
-            Toast.makeText(getApplicationContext(), "onStatusChanged", Toast.LENGTH_SHORT).show();
+
         }
 
     }
