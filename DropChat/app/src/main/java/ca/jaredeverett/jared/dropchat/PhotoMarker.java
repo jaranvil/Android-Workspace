@@ -26,17 +26,23 @@ public class PhotoMarker {
 
 
 
-    public PhotoMarker(int id, double lat, double lng, String url, String title, String description)
+    public PhotoMarker(int id, int user_id, double lat, double lng, String url, String title, String text, String link, int type)
     {
 
 
-        String snippetText = url+":"+title+" :"+description+" ";
+        String snippetText = user_id+":"+url+":"+title+" :"+text+" :"+link+" :"+type;
         LatLng temp = new LatLng(lat, lng);
         this.marker = new MarkerOptions()
                 .position(temp)
                 .title("test")
-                .snippet(snippetText)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_link));
+                .snippet(snippetText);
+
+        if (type == 1)
+            this.marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_text));
+        if (type == 2)
+            this.marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_link));
+        if (type == 3)
+            this.marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_photo));
 
         //String path = "http://jaredeverett.ca/android/images/"+url+"_thumbnail.PNG";
         //ThumbnailLoadTask load = new ThumbnailLoadTask(path);

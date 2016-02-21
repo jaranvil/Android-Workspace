@@ -90,9 +90,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LinearLayout lyInfoView;
     private Button btnOkay;
     private Button btnAbout;
+    private Button btnZoom1;
+    private Button btnZoom2;
+    private Button btnZoom3;
 
     public String username = "";
 
+    private float currentZoom = 17.0f;
 
     private WebService remote = new WebService();
     private PhotoUtil photoUtil = new PhotoUtil();
@@ -165,8 +169,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lyInfoView = (LinearLayout) findViewById(R.id.lyInfoView);
         btnOkay = (Button) findViewById(R.id.btnOkay);
         btnAbout = (Button) findViewById(R.id.btnAbout);
+        btnZoom1 = (Button) findViewById(R.id.btnZoom1);
+        btnZoom2 = (Button) findViewById(R.id.btnZoom2);
+        btnZoom3 = (Button) findViewById(R.id.btnZoom3);
 
-        tvUsername.setText(sharedpreferences.getString("username", ""));
 
         // Check if welcome screen is needed
         boolean viewed = sharedpreferences.getBoolean("viewed", false);
@@ -213,8 +219,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         btnAbout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //lyInfoView.setVisibility(View.VISIBLE);
-                startActivity(new Intent("NewDropActivity"));
+                lyInfoView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnZoom1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (map != null && userLocation != null)
+                {
+                    currentZoom = 15.0f;
+                    LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, currentZoom);
+                    map.animateCamera(yourLocation);
+
+                    btnZoom1.setBackgroundColor(Color.parseColor("#500000ff"));
+                    btnZoom2.setBackgroundColor(Color.parseColor("#80000000"));
+                    btnZoom3.setBackgroundColor(Color.parseColor("#80000000"));
+                }
+            }
+        });
+
+        btnZoom2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (map != null && userLocation != null)
+                {
+                    currentZoom = 17.0f;
+                    LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, currentZoom);
+                    map.animateCamera(yourLocation);
+
+                    btnZoom1.setBackgroundColor(Color.parseColor("#80000000"));
+                    btnZoom2.setBackgroundColor(Color.parseColor("#500000ff"));
+                    btnZoom3.setBackgroundColor(Color.parseColor("#80000000"));
+                }
+            }
+        });
+
+        btnZoom3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (map != null && userLocation != null)
+                {
+                    currentZoom = 20.0f;
+                    LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, currentZoom);
+                    map.animateCamera(yourLocation);
+
+                    btnZoom1.setBackgroundColor(Color.parseColor("#80000000"));
+                    btnZoom2.setBackgroundColor(Color.parseColor("#80000000"));
+                    btnZoom3.setBackgroundColor(Color.parseColor("#500000ff"));
+                }
             }
         });
     }
@@ -235,6 +288,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String username = sharedpreferences.getString("username", "");
         if (username.equals(""))
             startActivity(new Intent("WelcomeActivity"));
+        else
+            remote.getUsername(sharedpreferences.getString("username", ""));
 
     }
 
@@ -308,7 +363,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker arg0) {
                 if (!arg0.getSnippet().equals("user")) {
-                    Intent i = new Intent("PhotoActivity");//create intent object
+                    Intent i = new Intent("ViewDropActivity");//create intent object
                     Bundle extras = new Bundle();//create bundle object
                     extras.putString("snippetString", arg0.getSnippet());
                     i.putExtras(extras);
@@ -323,6 +378,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void drawMarkers()
     {
+        if (tvUsername.getText().equals(""))
+            tvUsername.setText(remote.username);
+
         if (remote.markersLoaded)
             tvLoadingPhotos.setText("");
         else
@@ -396,7 +454,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, 17.0f);
+            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(currentPosition, currentZoom);
             //CameraUpdate yourLocation = CameraUpdateFactory.newLatLng(currentPosition);
             if (animate)
                 map.animateCamera(yourLocation);

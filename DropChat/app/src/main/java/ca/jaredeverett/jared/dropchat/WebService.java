@@ -63,6 +63,13 @@ public class WebService {
         taskFetchAll.execute(params);
     }
 
+    public void getUsername(String user_id)
+    {
+        getUsernameTask task = new getUsernameTask();
+        String[] params = {user_id};
+        task.execute(params);
+    }
+
     public void lookUpCivicAddress(double lat, double lng) {
         GetCivicAddress getCivicAddress = new GetCivicAddress();
         String[] params = {Double.toString(lat), Double.toString(lng)};
@@ -101,13 +108,16 @@ public class WebService {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     int id = Integer.parseInt(jsonObject.optString("id"));
+                    int user_id = Integer.parseInt(jsonObject.optString("user_id"));
                     double lat = Double.parseDouble(jsonObject.optString("lat"));
                     double lng = Double.parseDouble(jsonObject.optString("lng"));
                     String url = jsonObject.optString("url");
                     String title = jsonObject.optString("title");
-                    String description = jsonObject.optString("description");
+                    String text = jsonObject.optString("text");
+                    String link = jsonObject.optString("link");
+                    int type = Integer.parseInt(jsonObject.optString("type"));
 
-                    allMarkers.add(new PhotoMarker(id, lat, lng, url, title, description));
+                    allMarkers.add(new PhotoMarker(id, user_id, lat, lng, url, title, text, link, type));
                 }
             }
             markersLoaded = true;
@@ -142,7 +152,7 @@ public class WebService {
                     String title = jsonObject.optString("title");
                     String description = jsonObject.optString("description");
 
-                    allMarkers.add(new PhotoMarker(id, lat, lng, url, title, description));
+                    //allMarkers.add(new PhotoMarker(id, lat, lng, url, title, description));
                 }
             }
         } catch (JSONException e) {
@@ -298,7 +308,7 @@ public class WebService {
         }
     }
 
-    private class getUsername extends AsyncTask<String, Void, String>
+    private class getUsernameTask extends AsyncTask<String, Void, String>
     {
         @Override
         protected String doInBackground(String... params) {
@@ -307,7 +317,7 @@ public class WebService {
             try {
                 // defaultHttpClient
                 DefaultHttpClient httpClient = new DefaultHttpClient();
-                String url = "https://www.jaredeverett.ca/android/getUsername.php?id=" + params[0];
+                String url = "http://www.jaredeverett.ca/android/getUsername.php?id=" + params[0];
                 HttpGet httpGet = new HttpGet(url);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
 
