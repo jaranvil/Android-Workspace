@@ -50,6 +50,7 @@ public class WebService {
 
     // Main list of map markers
     protected ArrayList<PhotoMarker> allMarkers = new ArrayList<>();
+    protected String username = "";
     protected boolean markersLoaded = false;
 
     static InputStream is = null;
@@ -68,10 +69,15 @@ public class WebService {
         getCivicAddress.execute(params);
     }
 
-    public void saveImage(String encodedString, String encodedThumbnail, double lat, double lng, String title, String description) {
+    public void saveImage(String encodedString, String encodedThumbnail, String lat, String lng, String title, String text, String link, String user_id, int type) {
         SaveImage taskSave = new SaveImage();
-        String[] params = {encodedString, encodedThumbnail, Double.toString(lat), Double.toString(lng), title, description};
+        String[] params = {encodedString, encodedThumbnail, lat, lng, title, text, link, user_id, Integer.toString(type)};
         taskSave.execute(params);
+    }
+
+    public void getUsernameTaskComplete(String username)
+    {
+        this.username = username;
     }
 
     // parse result from http response in 'task'
@@ -153,7 +159,7 @@ public class WebService {
             try {
                 // defaultHttpClient
                 DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://www.jaredeverett.ca/android/all_photo_markers.php");
+                HttpPost httpPost = new HttpPost("http://www.jaredeverett.ca/android/getDropsInArea.php");
 
                 List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
                 nameValuePair.add(new BasicNameValuePair("lat", params[0]));
@@ -207,15 +213,19 @@ public class WebService {
         protected Void doInBackground(String... params) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://www.jaredeverett.ca/android/save_thumbnail.php");
+                HttpPost httppost = new HttpPost("http://www.jaredeverett.ca/android/createDrop.php");
 
                 List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+
                 nameValuePair.add(new BasicNameValuePair("fullImage", params[0]));
                 nameValuePair.add(new BasicNameValuePair("thumbnail", params[1]));
                 nameValuePair.add(new BasicNameValuePair("lat", params[2]));
                 nameValuePair.add(new BasicNameValuePair("lng", params[3]));
                 nameValuePair.add(new BasicNameValuePair("title", params[4]));
-                nameValuePair.add(new BasicNameValuePair("description", params[5]));
+                nameValuePair.add(new BasicNameValuePair("text", params[5]));
+                nameValuePair.add(new BasicNameValuePair("link", params[6]));
+                nameValuePair.add(new BasicNameValuePair("user", params[7]));
+                nameValuePair.add(new BasicNameValuePair("type", params[8]));
 
                 try {
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -285,6 +295,53 @@ public class WebService {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             parseCivicAddressJSON(s);
+        }
+    }
+
+    private class getUsername extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected String doInBackground(String... params) {
+            String json = "";
+            // Making HTTP request
+            try {
+                // defaultHttpClient
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                String url = "https://www.jaredeverett.ca/android/getUsername.php?id=" + params[0];
+                HttpGet httpGet = new HttpGet(url);
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+
+                HttpEntity httpEntity = httpResponse.getEntity();
+                is = httpEntity.getContent();
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        is, "iso-8859-1"), 8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                is.close();
+                json = sb.toString();
+            } catch (Exception e) {
+                Log.e("Buffer Error", "Error converting result " + e.toString());
+            }
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            getUsernameTaskComplete(s);
         }
     }
 }

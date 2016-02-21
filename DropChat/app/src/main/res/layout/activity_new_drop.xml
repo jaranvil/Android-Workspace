@@ -1,0 +1,159 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#dddddd"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="#80000000">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivDropType"
+            android:background="@drawable/marker_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Drop"
+            android:id="@+id/textView10"
+            android:textColor="#ffffff"
+            android:textSize="32dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What do you want to drop?"
+        android:id="@+id/textView11"
+        android:textColor="#4d6cfa"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_marginLeft="10dp"
+        android:alpha="0.8" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:id="@+id/rgGroup"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Text"
+            android:id="@+id/rbText"
+            android:textColor="#000000"
+            android:checked="true"
+            android:layout_weight="3.3"
+            android:layout_gravity="center_horizontal" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link"
+            android:id="@+id/rbLink"
+            android:textColor="#000000"
+            android:checked="false"
+            android:layout_weight="3.3" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo"
+            android:id="@+id/rbPhoto"
+            android:textColor="#000000"
+            android:checked="false"
+            android:layout_weight="3.3" />
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etTitle"
+        android:layout_gravity="center_horizontal"
+        android:hint="Enter a Title"
+        android:layout_margin="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/etText"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:layout_weight="0.20"
+        android:hint="Enter Text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etLink"
+        android:layout_gravity="center_horizontal"
+        android:hint="Enter Link"
+        android:layout_margin="10dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lyPhoto">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Photo"
+            android:id="@+id/textView12"
+            android:textColor="#4d6cfa"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_marginLeft="10dp"
+            android:alpha="0.8" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/lyPhoto2">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/ivPhoto"
+                android:layout_margin="10dp"
+                android:background="#ffffff" />
+
+            <Button
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:id="@+id/btnCanera"
+                android:layout_gravity="center"
+                android:background="@android:drawable/ic_menu_camera"
+                android:layout_marginLeft="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Drop!"
+        android:id="@+id/btnDrop"
+        android:layout_margin="10dp" />
+
+</LinearLayout>

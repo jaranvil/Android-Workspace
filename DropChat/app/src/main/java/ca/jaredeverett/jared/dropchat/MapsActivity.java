@@ -91,6 +91,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnOkay;
     private Button btnAbout;
 
+    public String username = "";
+
 
     private WebService remote = new WebService();
     private PhotoUtil photoUtil = new PhotoUtil();
@@ -98,7 +100,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Stores the thumbnail captured by the user
     // holding onto it while waiting for confirmation actvivity
-    private Bitmap photo;
+    //private Bitmap photo;
+    //private Bitmap photo;
 
     @Override
     public void onPause()
@@ -173,21 +176,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // listener for drop button
         btnDrop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photoFile));
-                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    }
+                if (userLocation == null)
+                {
+                    Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Intent i = new Intent("NewDropActivity");//create intent object
+                    Bundle extras = new Bundle();
+                    extras.putString("lat", Double.toString(userLocation.getLatitude()));
+                    extras.putString("lng", Double.toString(userLocation.getLongitude()));
+                    i.putExtras(extras);
+                    startActivityForResult(i, 6);
                 }
             }
         });
@@ -213,7 +213,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         btnAbout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                lyInfoView.setVisibility(View.VISIBLE);
+                //lyInfoView.setVisibility(View.VISIBLE);
+                startActivity(new Intent("NewDropActivity"));
             }
         });
     }
@@ -240,64 +241,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // When the camera activity finished it encodes the image as a bitmap in the result data
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Return from camera actvity
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+
+
+        // Return from the new create drop actiity.
+
+        if (userLocation != null)
         {
-
-            //Bitmap photo = photoUtil.getScaledBitmap(mCurrentPhotoPath, 500, 800); // TODO - get view demensions
-
-            // Get Thumbnail
-//            Bundle extras = data.getExtras();
-//            photo = (Bitmap) extras.get("data");
-
-
-            // open confirmation activity
-            Intent i = new Intent("CreateActivity");//create intent object
-            i.putExtra("image", photo); // TODO - save image as a local file and pass its URL to the activity.
-            Bundle extras = new Bundle();
-            extras.putString("filePath", mCurrentPhotoPath);
-            i.putExtras(extras);
-            startActivityForResult(i, 3);
+            Toast.makeText(getApplicationContext(), "Dropping...", Toast.LENGTH_SHORT).show();
         }
-        // return from Confirmation activity
-        else if (requestCode == 3 && resultCode == RESULT_OK)
-        {
-            // TODO - file compression and encoding into PhotoUtil class
-            File file = new File(mCurrentPhotoPath);
+        else
+            Toast.makeText(getApplicationContext(), "Could not get location.", Toast.LENGTH_SHORT).show();
 
-            // encode full image
-            Bitmap temp = decodeFile(file, false);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            temp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] imageBytes = baos.toByteArray();
-            String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+        if (userLocation != null)
+            remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
 
-            // encode tumbanil
-            Bitmap temp2 = decodeFile(file, true);
-            ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-            temp2.compress(Bitmap.CompressFormat.PNG, 100, baos2);
-            byte[] imageBytes2 = baos2.toByteArray();
-            String encodedThumbnail = Base64.encodeToString(imageBytes2, Base64.NO_WRAP);
-
-            //TODO - delete photo if confirmation activity is canceled or finishs via back button
-            file.delete();
-
-            Bundle res = data.getExtras();
-            String title = res.getString("title");
-            String description = res.getString("description");
-
-            if (userLocation != null)
-            {
-                remote.saveImage(encodedImage, encodedThumbnail, userLocation.getLatitude(), userLocation.getLongitude(), title, description);
-                Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
-            }
-            else
-                Toast.makeText(getApplicationContext(), "Could not get location.", Toast.LENGTH_SHORT).show();
-
-            if (userLocation != null)
-                remote.loadMarkers(userLocation.getLatitude(), userLocation.getLongitude());
-        }
-        else if (requestCode == 4 && resultCode == RESULT_OK)
+        if (resultCode == RESULT_OK)
         {
             // return from viewing a photo
             // refresh markers in case user deleted or updated a photo
@@ -306,35 +264,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // Decodes image and scales it to reduce memory consumption
-    private Bitmap decodeFile(File f, boolean thumbnail) {
-        try {
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
-            // The new size we want to scale to
-            final int REQUIRED_SIZE;
-            if (thumbnail)
-                REQUIRED_SIZE=60;
-            else
-                REQUIRED_SIZE=300;
-
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
-                scale *= 2;
-            }
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        } catch (FileNotFoundException e) {}
-        return null;
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -406,6 +336,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (remote.allMarkers.get(i).marker != null)
                 map.addMarker(remote.allMarkers.get(i).marker);
 
+        if (tvUsername.getText().equals(""))
+            tvUsername.setText(sharedpreferences.getString("username", ""));
+
 //        LatLng currentPosition = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
 //        MarkerOptions userMarker = new MarkerOptions().position(currentPosition).title("You are here").snippet("user");
 //        userMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
@@ -423,28 +356,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
-    // create file to write new image to
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        // create file to write new image to
+        private File createImageFile() throws IOException {
+            // Create an image file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_";
 
-        // public gallery folder
-        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            // public gallery folder
+            //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-        // private to the app storage
-        File storageDir = getExternalFilesDir(null);
+            // private to the app storage
+            File storageDir = getExternalFilesDir(null);
 
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
+            // Save a file: path for use with ACTION_VIEW intents
+            mCurrentPhotoPath = image.getAbsolutePath();
+            return image;
+        }
 
     class LocationUpdateListener implements LocationListener
     {

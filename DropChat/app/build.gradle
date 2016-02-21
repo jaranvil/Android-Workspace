@@ -10,7 +10,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "ca.jaredeverett.jared.dropchat"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

@@ -37,12 +37,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBWWF3rB-h_6_bc_2uApgO5-_K8pxLllQU" />
 
-        <!--RELEASE-->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyCY65pAIyRH2030rEko5tWU4IgvkToffpk" />-->
-
-
+        <!-- RELEASE -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyCY65pAIyRH2030rEko5tWU4IgvkToffpk" /> -->
 
         <activity
             android:name=".MapsActivity"
@@ -83,7 +81,14 @@
         </activity>
         <activity
             android:name=".UserActivity"
-            android:label="@string/title_activity_user"></activity>
+            android:label="@string/title_activity_user" />
+        <activity android:name=".NewDropActivity">
+            <intent-filter>
+                <action android:name="NewDropActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

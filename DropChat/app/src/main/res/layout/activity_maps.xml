@@ -133,7 +133,7 @@
         android:id="@+id/btnDrop"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:background="@drawable/add_button" />
+        android:background="@drawable/new_button" />
 
     <TextView
         android:layout_width="wrap_content"

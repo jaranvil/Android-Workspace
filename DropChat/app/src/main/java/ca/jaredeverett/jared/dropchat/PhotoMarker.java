@@ -36,11 +36,11 @@ public class PhotoMarker {
                 .position(temp)
                 .title("test")
                 .snippet(snippetText)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.picture_icon));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_link));
 
-        String path = "http://jaredeverett.ca/android/images/"+url+"_thumbnail.PNG";
-        ThumbnailLoadTask load = new ThumbnailLoadTask(path);
-        load.execute();
+        //String path = "http://jaredeverett.ca/android/images/"+url+"_thumbnail.PNG";
+        //ThumbnailLoadTask load = new ThumbnailLoadTask(path);
+        //load.execute();
     }
 
     public void createMarker(Bitmap thumbnail)
