@@ -378,8 +378,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void drawMarkers()
     {
-        if (tvUsername.getText().equals(""))
-            tvUsername.setText(remote.username);
+
+        tvUsername.setText(remote.username);
 
         if (remote.markersLoaded)
             tvLoadingPhotos.setText("");

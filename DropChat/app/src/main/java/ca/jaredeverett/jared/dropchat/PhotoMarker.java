@@ -26,7 +26,7 @@ public class PhotoMarker {
 
 
 
-    public PhotoMarker(int id, int user_id, double lat, double lng, String url, String title, String text, String link, int type)
+    public PhotoMarker(int id, String user_id, double lat, double lng, String url, String title, String text, String link, int type)
     {
 
 

@@ -108,10 +108,10 @@ public class WebService {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     int id = Integer.parseInt(jsonObject.optString("id"));
-                    int user_id = Integer.parseInt(jsonObject.optString("user_id"));
+                    String user_id = jsonObject.optString("user_id");
                     double lat = Double.parseDouble(jsonObject.optString("lat"));
                     double lng = Double.parseDouble(jsonObject.optString("lng"));
-                    String url = jsonObject.optString("url");
+                    String url = jsonObject.optString("photo_filename");
                     String title = jsonObject.optString("title");
                     String text = jsonObject.optString("text");
                     String link = jsonObject.optString("link");
